@@ -10,7 +10,6 @@ use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Security\Permission;
 
 class Song extends DataObject
 {
@@ -22,7 +21,7 @@ class Song extends DataObject
     ];
 
     private static $has_one = [
-        'StreamFile' => File::class,
+        'StreamFile' => File::class
     ];
 
     private static $owns = ['StreamFile'];
@@ -40,7 +39,6 @@ class Song extends DataObject
         $streamFileField->setFolderName('Songs');
         $streamFileField->getValidator()->setAllowedExtensions(['mp3']);
         $streamFileField->getValidator()->setAllowedMaxFileSize('50M');
-        
 
         $fields->addFieldsToTab('Root.Main', [
             $titleField,
