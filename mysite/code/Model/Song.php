@@ -16,8 +16,12 @@ class Song extends DataObject
     private static $table_name = 'Song';
 
     private static $db = [
-        'Title' => 'Varchar(255)',
+        'Title'  => 'Varchar(255)',
         'Length' => 'Decimal',
+        'Artist' => 'Varchar(255)',
+        'Album'  => 'Varchar(255)',
+        'Disc'   => 'Int',
+        'Track'  => 'Int'
     ];
 
     private static $has_one = [
@@ -30,20 +34,19 @@ class Song extends DataObject
     {
         $fields = FieldList::create(TabSet::create('Root'));
 
-        $titleField = TextField::create('Title');
-
-        $lengthField = NumericField::create('Length');
-        $lengthField->setScale(2);
-
-        $streamFileField = UploadField::create('StreamFile', 'The Song File');
-        $streamFileField->setFolderName('Songs');
-        $streamFileField->getValidator()->setAllowedExtensions(['mp3']);
-        $streamFileField->getValidator()->setAllowedMaxFileSize('50M');
+        $uploader = UploadField::create('StreamFile', 'The Song File');
+        $uploader->setFolderName('Songs');
+        $uploader->getValidator()->setAllowedExtensions(['mp3']);
+        $uploader->getValidator()->setAllowedMaxFileSize('50M');
 
         $fields->addFieldsToTab('Root.Main', [
-            $titleField,
-            $lengthField,
-            $streamFileField
+            TextField::create('Title'),
+            TextField::create('Artist'),
+            TextField::create('Album'),
+            NumericField::create('Length')->setScale(2),
+            NumericField::create('Disc'),
+            NumericField::create('Track'),
+            $uploader
         ]);
 
         return $fields;

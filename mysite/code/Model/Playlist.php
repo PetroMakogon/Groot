@@ -9,7 +9,7 @@ class Playlist extends DataObject
     private static $table_name = 'Playlist';
 
     private static $db = [
-        'Title' => 'Varchar(255)',
+        'Title'       => 'Varchar(255)',
         'Description' => 'Varchar(255)'
     ];
 
