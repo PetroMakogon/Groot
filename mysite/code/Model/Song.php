@@ -25,7 +25,6 @@ use SilverStripe\ORM\DataObject;
  * @property string Album
  * @property int Disc
  * @property int Track
- * @property bool ExtractInfoFromFile
  * @property File StreamFile
  */
 class Song extends DataObject
@@ -33,13 +32,12 @@ class Song extends DataObject
     private static $table_name = 'Song';
 
     private static $db = [
-        'Title'               => 'Varchar(255)',
-        'Length'              => 'Decimal',
-        'Artist'              => 'Varchar(255)',
-        'Album'               => 'Varchar(255)',
-        'Disc'                => 'Int',
-        'Track'               => 'Int',
-        'ExtractInfoFromFile' => 'Boolean'
+        'Title'  => 'Varchar(255)',
+        'Length' => 'Decimal',
+        'Artist' => 'Varchar(255)',
+        'Album'  => 'Varchar(255)',
+        'Disc'   => 'Int',
+        'Track'  => 'Int'
     ];
 
     private static $has_one = [
@@ -51,6 +49,7 @@ class Song extends DataObject
     private static $summary_fields = [
         'Title',
         'Artist',
+        'Album',
         'Length'
     ];
 
@@ -70,14 +69,14 @@ class Song extends DataObject
         $uploader->getValidator()->setAllowedMaxFileSize('50M');
 
         $fields->addFieldsToTab('Root.Main', [
+            $uploader,
+            CheckboxField::create('ExtractInfo', 'Extract Information from Mp3 File?'),
             TextField::create('Title'),
             TextField::create('Artist'),
             TextField::create('Album'),
             NumericField::create('Length')->setScale(2),
             NumericField::create('Disc'),
-            NumericField::create('Track'),
-            $uploader,
-            CheckboxField::create('ExtractInfoFromFile', 'Extract Information from Mp3 File?')
+            NumericField::create('Track')
         ]);
 
         return $fields;
@@ -90,46 +89,68 @@ class Song extends DataObject
     {
         $info = [];
 
-        if ($this->StreamFile) {
-            $fullPath = BASE_PATH . $this->StreamFile->getSourceURL();
-            try {
-                $getID3 = new getID3;
-                $raw = $getID3->analyze($fullPath);
-                getid3_lib::CopyTagsToComments($raw);
+        if (empty($this->record['StreamFileID'])) {
+            return $info;
+        }
 
-                $comments = $raw['comments'];
+        if (!$this->StreamFile->isPublished()) {
+            $this->StreamFile->publishFile();
+        }
 
-                $attr = [
-                    'title'         => 'Title',
-                    'artist'        => 'Artist',
-                    'album'         => 'Album',
-                    'track_number'  => 'Track',
-                    'part_of_a_set' => 'Disc'
-                ];
+        $fullPath = BASE_PATH . $this->StreamFile->getSourceURL();
+        try {
+            $getID3 = new getID3;
+            $raw = $getID3->analyze($fullPath);
+            getid3_lib::CopyTagsToComments($raw);
 
-                foreach ($attr as $rawKey => $newKey) {
-                    $info[$newKey] = \is_array($comments[$rawKey]) ?
-                        reset($comments[$rawKey]) :
-                        $comments[$rawKey];
+            $comments = $raw['comments'] ?? [];
+            $comments['playtime_seconds'] = $raw['playtime_seconds'] ?? 0;
+
+            $attr = [
+                'title'            => 'Title',
+                'artist'           => 'Artist',
+                'album'            => 'Album',
+                'track_number'     => 'Track',
+                'part_of_a_set'    => 'Disc',
+                'playtime_seconds' => 'Length'
+            ];
+
+            foreach ($attr as $rawKey => $newKey) {
+                $value = $comments[$rawKey] ?? null;
+                if (\is_array($value)) {
+                    $value = reset($value);
                 }
-                return $info;
-            } catch (\getid3_exception $e) {
+                if (empty($value)) {
+                    continue;
+                }
+
+                $info[$newKey] = $value;
             }
+        } catch (\getid3_exception $e) {
         }
 
         return $info;
     }
 
-    protected function onBeforeWrite()
+    public function validate()
     {
-        parent::onBeforeWrite();
+        $result = parent::validate();
 
-        if ($this->StreamFile && $this->ExtractInfoFromFile) {
+        if (!empty($this->record['StreamFileID']) && !empty($this->record['ExtractInfo'])) {
             $info = $this->getID3Info();
             foreach ($info as $key => $value) {
                 $this->record[$key] = $value;
             }
         }
 
+        if (!$this->StreamFile->exists()) {
+            $result->addFieldError('StreamFile', 'File is not uploaded');
+        }
+
+        if (!$this->Title) {
+            $result->addFieldError('Title', 'Title cannot be empty');
+        }
+
+        return $result;
     }
 }
