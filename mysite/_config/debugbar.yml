@@ -1,0 +1,6 @@
+---
+Name: mysitedebugbar
+---
+LeKoala\DebugBar\DebugBar:
+  enabled_in_admin: true
+  check_local_ip: false
