@@ -44,8 +44,6 @@ class Song extends DataObject
         'StreamFile' => File::class
     ];
 
-    private static $owns = ['StreamFile'];
-
     private static $summary_fields = [
         'Title',
         'Artist',
@@ -135,6 +133,10 @@ class Song extends DataObject
     public function validate()
     {
         $result = parent::validate();
+
+        if (!$this->StreamFile->isPublished()) {
+            $this->StreamFile->publishFile();
+        }
 
         if (!empty($this->record['StreamFileID']) && !empty($this->record['ExtractInfo'])) {
             $info = $this->getID3Info();
