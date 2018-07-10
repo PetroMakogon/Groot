@@ -3,6 +3,7 @@
 
 namespace ModelAdmin;
 
+use Model\BatchUploadJob;
 use Model\Song;
 use SilverStripe\Admin\ModelAdmin;
 
@@ -13,6 +14,7 @@ class SongAdmin extends ModelAdmin
     private static $url_segment = 'songs';
 
     private static $managed_models = [
-        Song::class
+        Song::class,
+        BatchUploadJob::class
     ];
 }

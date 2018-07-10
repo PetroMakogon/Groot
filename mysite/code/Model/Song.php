@@ -89,7 +89,7 @@ class Song extends DataObject
     {
         $info = [];
 
-        if (empty($this->record['StreamFileID'])) {
+        if (!$this->StreamFile || !$this->StreamFile->exists()) {
             return $info;
         }
 
