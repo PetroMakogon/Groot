@@ -25,10 +25,14 @@ class ProcessBatchUploadJobTask extends BuildTask
      */
     public function run($request)
     {
-        $queueID = $request->getVar('id');
+        $jobID = $request->getVar('id');
+
+        if (!$jobID) {
+            $this->exitWithError('No job id is given');
+        }
 
         /* @var $job BatchUploadJob */
-        $job = BatchUploadJob::get()->byID($queueID);
+        $job = BatchUploadJob::get()->byID($jobID);
         if ($job->Status !== BatchUploadJob::STATUS_PENDING) {
             $this->exitWithError('This job is not under PENDING status');
         }
@@ -43,6 +47,7 @@ class ProcessBatchUploadJobTask extends BuildTask
         foreach ($files as $file) {
             /* @var $file File */
             echo 'Processing File: ' . $file->getFilename() . "\n";
+
             try {
                 $song = Song::create();
                 $song->StreamFile = $file;
@@ -51,6 +56,7 @@ class ProcessBatchUploadJobTask extends BuildTask
                     $song->$key = $value;
                 }
                 $song->write();
+                $song->StreamFile->owner->publishRecursive();
 
                 /** @noinspection IncrementDecrementOperationEquivalentInspection */
                 $job->ProcessedNumberOfFiles += 1;

@@ -29,6 +29,8 @@ use SilverStripe\ORM\DataObject;
  */
 class Song extends DataObject
 {
+    public const FOLDER_NAME = 'Songs';
+
     private static $table_name = 'Song';
 
     private static $db = [
@@ -39,6 +41,8 @@ class Song extends DataObject
         'Disc'   => 'Int',
         'Track'  => 'Int'
     ];
+
+    private static $owns = ['StreamFile'];
 
     private static $has_one = [
         'StreamFile' => File::class
@@ -62,7 +66,7 @@ class Song extends DataObject
         $fields = FieldList::create(TabSet::create('Root'));
 
         $uploader = UploadField::create('StreamFile', 'The Song File');
-        $uploader->setFolderName('Songs');
+        $uploader->setFolderName(self::FOLDER_NAME);
         $uploader->getValidator()->setAllowedExtensions(['mp3']);
         $uploader->getValidator()->setAllowedMaxFileSize('50M');
 
@@ -133,11 +137,7 @@ class Song extends DataObject
     public function validate()
     {
         $result = parent::validate();
-
-        if (!$this->StreamFile->isPublished()) {
-            $this->StreamFile->publishFile();
-        }
-
+        
         if (!empty($this->record['StreamFileID']) && !empty($this->record['ExtractInfo'])) {
             $info = $this->getID3Info();
             foreach ($info as $key => $value) {

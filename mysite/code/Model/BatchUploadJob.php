@@ -56,7 +56,7 @@ class BatchUploadJob extends DataObject
 
         if (!$this->isInDB()) {
             $uploader = UploadField::create('StreamFiles', 'The Song Files');
-            $uploader->setFolderName('Songs');
+            $uploader->setFolderName(Song::FOLDER_NAME);
             $uploader->getValidator()->setAllowedExtensions(['mp3']);
             $uploader->getValidator()->setAllowedMaxFileSize('1024M');
             $uploader->setAllowedMaxFileNumber(1000);
@@ -93,17 +93,10 @@ class BatchUploadJob extends DataObject
     {
         parent::onBeforeWrite();
 
-        if (!$this->isInDB()) {
-            $files = $this->StreamFiles() ?? new ArrayList();
+        $files = $this->StreamFiles() ?? new ArrayList();
+        $this->record['TotalNumberOfFiles'] = $files->count();
 
-            foreach ($files as $file) {
-                /* @var $file File */
-                if (!$file->isPublished()) {
-                    $file->publishFile();
-                }
-            }
-
-            $this->record['TotalNumberOfFiles'] = $files->count();
+        if ($this->Status === self::STATUS_PENDING) {
             $this->record['ProcessedNumberOfFiles'] = 0;
         }
     }
