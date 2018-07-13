@@ -12,6 +12,8 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\TextField;
+use SilverStripe\GraphQL\Scaffolding\Interfaces\ScaffoldingProvider;
+use SilverStripe\GraphQL\Scaffolding\Scaffolders\SchemaScaffolder;
 use SilverStripe\ORM\DataObject;
 
 /**
@@ -27,7 +29,7 @@ use SilverStripe\ORM\DataObject;
  * @property int Track
  * @property File StreamFile
  */
-class Song extends DataObject
+class Song extends DataObject implements ScaffoldingProvider
 {
     public const FOLDER_NAME = 'Songs';
 
@@ -137,7 +139,7 @@ class Song extends DataObject
     public function validate()
     {
         $result = parent::validate();
-        
+
         if (!empty($this->record['StreamFileID']) && !empty($this->record['ExtractInfo'])) {
             $info = $this->getID3Info();
             foreach ($info as $key => $value) {
@@ -154,5 +156,19 @@ class Song extends DataObject
         }
 
         return $result;
+    }
+
+    /**
+     * @param SchemaScaffolder $schema
+     * @return SchemaScaffolder
+     * @throws \InvalidArgumentException
+     */
+    public function provideGraphQLScaffolding(SchemaScaffolder $schema): SchemaScaffolder
+    {
+        $dataObject = $schema->type(Song::class);
+        $dataObject->addAllFields(true);
+        $dataObject->operation(SchemaScaffolder::READ);
+
+        return $schema;
     }
 }

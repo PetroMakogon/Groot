@@ -3,3 +3,9 @@ Name: myproject
 ---
 SilverStripe\Core\Manifest\ModuleManifest:
   project: mysite
+
+SilverStripe\GraphQL\Controller:
+  schema:
+    scaffolding_providers:
+      - Model\Song
+
