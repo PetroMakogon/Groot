@@ -13,10 +13,12 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\TextField;
+use SilverStripe\GraphQL\Scaffolding\Interfaces\ResolverInterface;
 use SilverStripe\GraphQL\Scaffolding\Interfaces\ScaffoldingProvider;
 use SilverStripe\GraphQL\Scaffolding\Scaffolders\ListQueryScaffolder;
 use SilverStripe\GraphQL\Scaffolding\Scaffolders\SchemaScaffolder;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObjectInterface;
 
 /**
  * Class Song
@@ -172,36 +174,40 @@ class Song extends DataObject implements ScaffoldingProvider
      */
     public function provideGraphQLScaffolding(SchemaScaffolder $schema): SchemaScaffolder
     {
-        $dataObject = $schema->type(Song::class);
-        $dataObject->addAllFields(true);
+        $song = $schema->type(Song::class)->addAllFields(true);
 
-        $readOp = $dataObject->operation(SchemaScaffolder::READ);
-        $readOp->addArg('id', 'Int');
-        $readOp->addArg('keyword', 'String');
-        $readOp->setResolver(function ($object, array $args, $context, ResolveInfo $info) {
-            $id = $args['id'] ?? null;
-            $keyword = $args['keyword'] ?? null;
+        /* @var $readSongs ListQueryScaffolder */
+        $readSongs = $song->operation(SchemaScaffolder::READ);
+        $readSongs->addArg('keyword', 'String');
+        $readSongs->addSortableFields(['Title', 'Artist', 'Album']);
+        $readSongs->setUsePagination(false);
+        $readSongs->setResolver(new class implements ResolverInterface
+        {
+            /**
+             * @param DataObjectInterface $object
+             * @param array $args
+             * @param array $context
+             * @param ResolveInfo $info
+             * @return mixed
+             */
+            public function resolve($object, $args, $context, $info)
+            {
+                $list = Song::get();
 
-            $list = Song::get();
+                $keyword = $args['keyword'] ?? null;
+                if ($keyword) {
+                    $list = $list->filterAny([
+                        'Title:PartialMatch'  => $keyword,
+                        'Artist:PartialMatch' => $keyword,
+                        'Album:PartialMatch'  => $keyword,
+                    ]);
+                }
 
-            if ($keyword) {
-                $list = $list->filterAny([
-                    'Title:PartialMatch'  => $keyword,
-                    'Artist:PartialMatch' => $keyword,
-                    'Album:PartialMatch'  => $keyword,
-                ]);
+                return $list;
             }
-
-            if ($id) {
-                $list = $list->byID($id);
-            }
-
-            return $list;
         });
 
-        /* @var $readOp ListQueryScaffolder */
-        $readOp->addSortableFields(['Title', 'Artist', 'Album']);
-        $readOp->setUsePagination(false);
+        $song->operation(SchemaScaffolder::READ_ONE);
 
         return $schema;
     }
