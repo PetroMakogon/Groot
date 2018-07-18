@@ -16,3 +16,24 @@ query {
   }
 }
 ```
+
+## Fetch Playlist list
+
+```
+query {
+  readPlaylists {
+    ID
+    Title
+    Description
+    Songs {
+      ID
+      Title
+      Length
+      Artist
+      Album
+      Disc
+      Track
+    }
+  }
+}
+```

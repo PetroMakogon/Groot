@@ -8,4 +8,5 @@ SilverStripe\GraphQL\Controller:
   schema:
     scaffolding_providers:
       - Model\Song
+      - Model\Playlist
 
