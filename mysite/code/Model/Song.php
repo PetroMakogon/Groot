@@ -52,6 +52,10 @@ class Song extends DataObject implements ScaffoldingProvider
         'StreamFile' => File::class
     ];
 
+    private static $belongs_many_many = [
+        'InPlaylists' => 'Playlist',
+    ];
+
     private static $summary_fields = [
         'Title',
         'Artist',
