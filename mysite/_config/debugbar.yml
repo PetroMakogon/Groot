@@ -2,5 +2,6 @@
 Name: mysitedebugbar
 ---
 LeKoala\DebugBar\DebugBar:
-  enabled_in_admin: true
+  enabled_in_admin: false
   check_local_ip: false
+  enable_storage: false

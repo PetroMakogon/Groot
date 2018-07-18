@@ -5,6 +5,7 @@ namespace Model;
 
 use getID3;
 use getid3_lib;
+use GraphQL\Type\Definition\ResolveInfo;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\File;
 use SilverStripe\Forms\CheckboxField;
@@ -13,6 +14,7 @@ use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\TextField;
 use SilverStripe\GraphQL\Scaffolding\Interfaces\ScaffoldingProvider;
+use SilverStripe\GraphQL\Scaffolding\Scaffolders\ListQueryScaffolder;
 use SilverStripe\GraphQL\Scaffolding\Scaffolders\SchemaScaffolder;
 use SilverStripe\ORM\DataObject;
 
@@ -161,13 +163,35 @@ class Song extends DataObject implements ScaffoldingProvider
     /**
      * @param SchemaScaffolder $schema
      * @return SchemaScaffolder
+     * @throws \RuntimeException
      * @throws \InvalidArgumentException
      */
     public function provideGraphQLScaffolding(SchemaScaffolder $schema): SchemaScaffolder
     {
         $dataObject = $schema->type(Song::class);
         $dataObject->addAllFields(true);
-        $dataObject->operation(SchemaScaffolder::READ);
+
+        $readOp = $dataObject->operation(SchemaScaffolder::READ);
+        $readOp->addArg('keyword', 'String');
+        $readOp->setResolver(function ($object, array $args, $context, ResolveInfo $info) {
+            $keyword = $args['keyword'] ?? null;
+
+            $list = Song::get();
+
+            if ($keyword) {
+                $list = $list->filterAny([
+                    'Title:PartialMatch'  => $keyword,
+                    'Artist:PartialMatch' => $keyword,
+                    'Album:PartialMatch'  => $keyword,
+                ]);
+            }
+
+            return $list->toArray();
+        });
+
+        /* @var $readOp ListQueryScaffolder */
+        $readOp->addSortableFields(['Title', 'Artist', 'Album']);
+        $readOp->setUsePagination(false);
 
         return $schema;
     }
