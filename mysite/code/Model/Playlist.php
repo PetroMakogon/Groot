@@ -2,6 +2,7 @@
 
 namespace Model;
 
+use GraphQL\Type\Definition\ResolveInfo;
 use SilverStripe\GraphQL\Scaffolding\Interfaces\ScaffoldingProvider;
 use SilverStripe\GraphQL\Scaffolding\Scaffolders\ListQueryScaffolder;
 use SilverStripe\GraphQL\Scaffolding\Scaffolders\SchemaScaffolder;
@@ -34,7 +35,17 @@ class Playlist extends DataObject implements ScaffoldingProvider
             ->addAllFields(true)
             ->operation(SchemaScaffolder::READ);
         $readPlaylists->addSortableFields(['Title']);
+        $readPlaylists->addArg('id', 'Int');
         $readPlaylists->setUsePagination(false);
+        $readPlaylists->setResolver(function ($object, array $args, $context, ResolveInfo $info) {
+            $list = Playlist::get();
+            $id = $args['id'] ?? null;
+            if ($id) {
+                $list = $list->byID($id);
+            }
+
+            return $list;
+        });
 
         /* @var $readSongs ListQueryScaffolder */
         $readSongs = $playlist->nestedQuery('Songs');

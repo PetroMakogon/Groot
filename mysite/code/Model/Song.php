@@ -172,8 +172,10 @@ class Song extends DataObject implements ScaffoldingProvider
         $dataObject->addAllFields(true);
 
         $readOp = $dataObject->operation(SchemaScaffolder::READ);
+        $readOp->addArg('id', 'Int');
         $readOp->addArg('keyword', 'String');
         $readOp->setResolver(function ($object, array $args, $context, ResolveInfo $info) {
+            $id = $args['id'] ?? null;
             $keyword = $args['keyword'] ?? null;
 
             $list = Song::get();
@@ -186,7 +188,11 @@ class Song extends DataObject implements ScaffoldingProvider
                 ]);
             }
 
-            return $list->toArray();
+            if ($id) {
+                $list = $list->byID($id);
+            }
+
+            return $list;
         });
 
         /* @var $readOp ListQueryScaffolder */
