@@ -28,28 +28,21 @@ class Playlist extends DataObject implements ScaffoldingProvider
      */
     public function provideGraphQLScaffolding(SchemaScaffolder $schema): SchemaScaffolder
     {
-        $playlist = $schema->type(Playlist::class);
+        $playlist = $schema->type(Playlist::class)->addAllFields(true);
 
         /* @var $readPlaylists ListQueryScaffolder */
-        $readPlaylists = $playlist
-            ->addAllFields(true)
-            ->operation(SchemaScaffolder::READ);
+        $readPlaylists = $playlist->operation(SchemaScaffolder::READ);
         $readPlaylists->addSortableFields(['Title']);
-        $readPlaylists->addArg('id', 'Int');
         $readPlaylists->setUsePagination(false);
-        $readPlaylists->setResolver(function ($object, array $args, $context, ResolveInfo $info) {
-            $list = Playlist::get();
-            $id = $args['id'] ?? null;
-            if ($id) {
-                $list = $list->byID($id);
-            }
-
-            return $list;
-        });
 
         /* @var $readSongs ListQueryScaffolder */
         $readSongs = $playlist->nestedQuery('Songs');
         $readSongs->setUsePagination(false);
+
+        $playlist->operation(SchemaScaffolder::READ_ONE);
+        $playlist->operation(SchemaScaffolder::CREATE);
+        $playlist->operation(SchemaScaffolder::DELETE);
+        $playlist->operation(SchemaScaffolder::UPDATE);
 
         return $schema;
     }
