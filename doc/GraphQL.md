@@ -37,3 +37,19 @@ query {
   }
 }
 ```
+
+## Create playlist
+
+```
+mutation CreatePlaylist($input: PlaylistCreateInputType!) {
+  createPlaylist(Input: $input) {
+    ID
+  }
+}
+
+{
+  "input": {
+    "Title": "title"
+  }
+}
+```

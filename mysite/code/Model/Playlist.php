@@ -21,6 +21,17 @@ class Playlist extends DataObject implements ScaffoldingProvider
         'Songs' => Song::class
     ];
 
+    public function validate()
+    {
+        $result = parent::validate();
+
+        if (!$this->Title) {
+            $result->addFieldError('Title', 'Title cannot be empty');
+        }
+
+        return $result;
+    }
+
     /**
      * @param SchemaScaffolder $schema
      * @return SchemaScaffolder
