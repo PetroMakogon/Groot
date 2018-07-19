@@ -54,6 +54,21 @@ class Playlist extends DataObject implements ScaffoldingProvider
      */
     public function provideGraphQLScaffolding(SchemaScaffolder $schema): SchemaScaffolder
     {
+        $this->provideGraphQLScaffoldingCRUD($schema);
+
+        $this->provideGraphQLScaffoldingAddSong($schema);
+
+        $this->provideGraphQLScaffoldingRemoveSong($schema);
+
+        return $schema;
+    }
+
+    /**
+     * @param SchemaScaffolder $schema
+     * @throws \InvalidArgumentException
+     */
+    private function provideGraphQLScaffoldingCRUD(SchemaScaffolder $schema): void
+    {
         $playlist = $schema->type(Playlist::class)->addAllFields(true);
 
         /* @var $readPlaylists ListQueryScaffolder */
@@ -69,7 +84,16 @@ class Playlist extends DataObject implements ScaffoldingProvider
         $playlist->operation(SchemaScaffolder::CREATE);
         $playlist->operation(SchemaScaffolder::DELETE);
         $playlist->operation(SchemaScaffolder::UPDATE);
+    }
 
+    /**
+     * @param SchemaScaffolder $schema
+     * @throws \Exception
+     * @throws \SilverStripe\ORM\ValidationException
+     * @throws \InvalidArgumentException
+     */
+    private function provideGraphQLScaffoldingAddSong(SchemaScaffolder $schema): void
+    {
         $addSong = $schema->mutation('addSongToPlaylist', Playlist::class);
         $addSong->addArgs([
             'PlaylistID' => 'Int',
@@ -119,7 +143,58 @@ class Playlist extends DataObject implements ScaffoldingProvider
                 return $playlist;
             }
         });
+    }
 
-        return $schema;
+    /**
+     * @param SchemaScaffolder $schema
+     * @throws \Exception
+     * @throws \SilverStripe\ORM\ValidationException
+     * @throws \InvalidArgumentException
+     */
+    private function provideGraphQLScaffoldingRemoveSong(SchemaScaffolder $schema): void
+    {
+        $addSong = $schema->mutation('removeSongFromPlaylist', Playlist::class);
+        $addSong->addArgs([
+            'PlaylistID' => 'Int',
+            'SongID'     => 'Int'
+        ]);
+        $addSong->setResolver(new class implements ResolverInterface
+        {
+            /**
+             * @param DataObjectInterface $object
+             * @param array $args
+             * @param array $context
+             * @param ResolveInfo $info
+             * @return mixed
+             * @throws \Exception
+             */
+            public function resolve($object, $args, $context, $info)
+            {
+                $validationResult = new ValidationResult();
+
+                $songID = $args['SongID'] ?? null;
+                if (!$songID) {
+                    $validationResult->addFieldError('SongID', 'Song ID can not be empty');
+                    throw new ValidationException($validationResult);
+                }
+
+                $playlistID = $args['PlaylistID'] ?? null;
+                if (!$playlistID) {
+                    $validationResult->addFieldError('PlaylistID', 'Playlist ID can not be empty');
+                    throw new ValidationException($validationResult);
+                }
+
+                /* @var $playlist Playlist */
+                $playlist = Playlist::get()->byID($playlistID);
+
+                if (!$playlist || !$playlist->exists()) {
+                    $validationResult->addFieldError('PlaylistID', 'Playlist does not exist');
+                    throw new ValidationException($validationResult);
+                }
+
+                $playlist->Songs()->removeByID($songID);
+                return $playlist;
+            }
+        });
     }
 }
