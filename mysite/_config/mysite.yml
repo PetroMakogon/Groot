@@ -5,8 +5,13 @@ SilverStripe\Core\Manifest\ModuleManifest:
   project: mysite
 
 SilverStripe\GraphQL\Controller:
+  cors:
+    Enabled: true # Off by default
+    Allow-Origin: '*' # Deny all by default
+    Allow-Headers: 'Authorization, Content-Type'
+    Allow-Methods:  'GET, POST, OPTIONS'
+    Max-Age:  86400  # 86,400 seconds = 1 day.
   schema:
     scaffolding_providers:
       - Model\Song
       - Model\Playlist
-
