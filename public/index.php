@@ -18,14 +18,6 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 // Build request and detect flush
 $request = HTTPRequestBuilder::createFromEnvironment();
 
-//die(json_encode([
-//    'getallheaders()'        => getallheaders(),
-//    '$request->getHeaders()' => $request->getHeaders()
-//]));
-
-/* @var $request \SilverStripe\Control\HTTPRequest */
-$request->addHeader('Authorization', getallheaders()['Authorization'] ?? '');
-
 // Default application
 $kernel = new CoreKernel(BASE_PATH);
 $app = new HTTPApplication($kernel);
