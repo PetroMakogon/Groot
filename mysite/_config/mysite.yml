@@ -12,6 +12,12 @@ SilverStripe\GraphQL\Controller:
     Allow-Methods:  'GET, POST, OPTIONS'
     Max-Age:  86400  # 86,400 seconds = 1 day.
   schema:
+    scaffolding:
+      types:
+        SilverStripe\Security\Member:
+          fields: ['ID', 'ClassName', 'LastEdited', 'Created', 'FirstName', 'Surname', 'Email', 'Locale']
+          operations:
+            readOne: true
     scaffolding_providers:
       - Model\Song
       - Model\Playlist
