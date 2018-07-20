@@ -50,6 +50,12 @@ class SongListItem extends Component<Props, State> {
         alert(`onOptionsButtonClick: ${this.props.song.Title}`);
     }
 
+    transformLengthInMinute(length: number) {
+        const minutes = parseInt(length / 60);
+        const seconds = parseInt(length - minutes * 60);
+        return `${minutes}:${seconds}`;
+    }
+
     render() {
         return (
             <div
@@ -63,16 +69,26 @@ class SongListItem extends Component<Props, State> {
                     style={styles.container}
                 >
                     <div className="card-body">
-                        <div className="row">
+                        <div className="row text-light">
                             <div className="col-sm-10">
                                 <h5 className="card-title">
                                     <div
                                         onClick={() => this.onPlayButtonClick()}
                                     >
                                         {this.state.mouseOver ? (
-                                            <i className="fas fa-play mr-2" style={styles.playButtonContainer}/>
+                                            <i
+                                                className="fas fa-play mr-2"
+                                                style={
+                                                    styles.playButtonContainer
+                                                }
+                                            />
                                         ) : (
-                                            <i className="fas fa-headphones mr-2" style={styles.playButtonContainer}/>
+                                            <i
+                                                className="fas fa-headphones mr-2"
+                                                style={
+                                                    styles.playButtonContainer
+                                                }
+                                            />
                                         )}
                                         {this.props.song.Title}
                                     </div>
@@ -86,10 +102,19 @@ class SongListItem extends Component<Props, State> {
                                             this.onOptionsButtonClick()
                                         }
                                     >
-                                        {this.state.mouseOver ? "..." : ""}
+                                        <i
+                                            className={
+                                                "fas fa-ellipsis-h " +
+                                                (this.state.mouseOver
+                                                    ? "visible"
+                                                    : "invisible")
+                                            }
+                                        />
                                     </div>
                                     <div className="col-sm-8 p-0">
-                                        {this.props.song.Length}
+                                        {this.transformLengthInMinute(
+                                            parseFloat(this.props.song.Length)
+                                        )}
                                     </div>
                                 </div>
                             </div>
