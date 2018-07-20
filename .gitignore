@@ -5,3 +5,5 @@
 /resources/
 /public/resources/
 client/node_modules
+public/scripts/*.hot-update.json
+public/scripts/*.hot-update.js
