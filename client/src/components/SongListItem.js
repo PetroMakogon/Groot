@@ -17,8 +17,8 @@ const styles = {
         width: "100%"
     },
     playButtonContainer: {
-        width: 22,
-        height: 22
+        width: 24,
+        height: 24
     }
 };
 
@@ -58,23 +58,24 @@ class SongListItem extends Component<Props, State> {
                 onMouseOver={() => this.onMouseOver()}
                 onMouseOut={() => this.onMouseOut()}
             >
-                <div className="card border-dark" style={styles.container}>
+                <div
+                    className="card border-dark rounded-0"
+                    style={styles.container}
+                >
                     <div className="card-body">
-                        <div className="row ml-auto">
-                            <div className="row col-sm-10">
-                                <div
-                                    className="mr-1"
-                                    style={styles.playButtonContainer}
-                                    onClick={() => this.onPlayButtonClick()}
-                                >
-                                    {this.state.mouseOver ? (
-                                        <i className="fas fa-play" />
-                                    ) : (
-                                        <i className="fas fa-headphones" />
-                                    )}
-                                </div>
+                        <div className="row">
+                            <div className="col-sm-10">
                                 <h5 className="card-title">
-                                    {this.props.song.Title}
+                                    <div
+                                        onClick={() => this.onPlayButtonClick()}
+                                    >
+                                        {this.state.mouseOver ? (
+                                            <i className="fas fa-play mr-2" style={styles.playButtonContainer}/>
+                                        ) : (
+                                            <i className="fas fa-headphones mr-2" style={styles.playButtonContainer}/>
+                                        )}
+                                        {this.props.song.Title}
+                                    </div>
                                 </h5>
                             </div>
                             <div className="col-sm-2">

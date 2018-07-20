@@ -3,7 +3,7 @@ import React, { Component } from "react";
 
 type Props = {
     className?: string,
-    style?: Object
+    style?: Object,
 };
 
 class PlaylistInfo extends Component<Props> {
