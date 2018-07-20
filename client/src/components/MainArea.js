@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import PlaylistInfo from "./PlaylistInfo";
 import SongList from "./SongList";
 import Song from "../models/Song";
+import Playlist from '../models/Playlist'
 
 type Props = {
     className?: string,
@@ -40,11 +41,21 @@ class MainArea extends Component<Props> {
             })
         ];
 
+        let playlist = Playlist.createFromJSONObject({
+            "ID": "1",
+            "ClassName": "Model\\Playlist",
+            "LastEdited": "2018-07-18 23:48:20",
+            "Created": "2018-07-18 23:48:20",
+            "Title": "My Playlist",
+            "Description": "The first playlist"
+        });
+        playlist.NumberOfSongs = 2;
+
         return (
             <div className={this.props.className} style={this.props.style}>
                 <div className="container-fluid">
                     <div className="row">
-                        <PlaylistInfo className="col-sm-3" />
+                        <PlaylistInfo className="col-sm-3" playlist={playlist} />
                         <SongList className="col-sm-9" songs={songs} />
                     </div>
                 </div>

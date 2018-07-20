@@ -1,7 +1,6 @@
 // @flow
 class Song {
     ID: string;
-    ClassName: string;
     LastEdited: string;
     Created: string;
     Title: string;
@@ -14,7 +13,6 @@ class Song {
     static createFromJSONObject(json: Object): Song {
         return Object.assign(new Song(), json);
     }
-
 }
 
 export default Song;
