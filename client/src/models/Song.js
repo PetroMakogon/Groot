@@ -1,18 +1,15 @@
 // @flow
-class Song {
-    ID: string;
-    LastEdited: string;
-    Created: string;
-    Title: string;
-    Length: string;
-    Artist: string;
-    Album: string;
-    Disc: number;
-    Track: number;
+import type { CMSFile } from "./CMSFile";
 
-    static createFromJSONObject(json: Object): Song {
-        return Object.assign(new Song(), json);
-    }
-}
-
-export default Song;
+export type Song = {
+    ID: string,
+    LastEdited: string,
+    Created: string,
+    Title: string,
+    Length: string,
+    Artist: string,
+    Album: string,
+    Disc: number,
+    Track: number,
+    StreamFile?: CMSFile
+};

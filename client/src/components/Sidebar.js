@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from "react";
 import NowPlayingItem from "./NowPlayingItem";
-import Song from "../models/Song";
+import type { Song } from '../models/Song'
 
 type Props = {
     className?: string,
@@ -26,7 +26,7 @@ const styles = {
 class Sidebar extends Component<Props> {
     render() {
         // TODO: move to store
-        const song = Song.createFromJSONObject({
+        const song: Song = {
             ID: "2",
             ClassName: "Model\\Song",
             LastEdited: "2018-07-18 21:03:44",
@@ -37,8 +37,9 @@ class Sidebar extends Component<Props> {
             Album: "Eternal Light",
             Disc: 1,
             Track: 7
-        });
+        };
 
+        // noinspection HtmlUnknownTarget
         return (
             <div
                 className={

@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from "react";
-import Song from "../models/Song";
+import type { Song } from "../models/Song";
 
 type Props = {
     className?: string,
@@ -50,9 +50,9 @@ class SongListItem extends Component<Props, State> {
         alert(`onOptionsButtonClick: ${this.props.song.Title}`);
     }
 
-    transformLengthInMinute(length: number) {
+    static transformLengthInMinute(length: number) {
         const minutes = parseInt(length / 60);
-        const seconds = parseInt(length - minutes * 60);
+        const seconds = `${parseInt(length - minutes * 60)}`.padStart(2, "0");
         return `${minutes}:${seconds}`;
     }
 
@@ -112,7 +112,7 @@ class SongListItem extends Component<Props, State> {
                                         />
                                     </div>
                                     <div className="col-sm-8 p-0">
-                                        {this.transformLengthInMinute(
+                                        {SongListItem.transformLengthInMinute(
                                             parseFloat(this.props.song.Length)
                                         )}
                                     </div>

@@ -1,18 +1,13 @@
 // @flow
-import Song from './Song'
 
-class Playlist {
-    ID: string;
-    LastEdited: string;
-    Created: string;
-    Title: string;
-    Description: string;
-    Songs: Array<Song>;
-    NumberOfSongs: number;
+import type { Song } from './Song'
 
-    static createFromJSONObject(json: Object): Playlist {
-        return Object.assign(new Playlist(), json);
-    }
-}
-
-export default Playlist;
+export type Playlist = {
+    ID: string,
+    LastEdited: string,
+    Created: string,
+    Title: string,
+    Description: string,
+    Songs: Array<Song>,
+    NumberOfSongs: number
+};
