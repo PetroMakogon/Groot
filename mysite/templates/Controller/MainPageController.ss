@@ -17,11 +17,13 @@
 <div id="root" style="width: 100%; height: 100%; position: absolute;">
 </div>
 
-<script src="http://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="scripts/particles.js"></script>
 <script>
     window.addEventListener('load', function () {
         particlesJS("particles-js", {
+            "fps_limit": 2,
             "particles": {
+                "fps_limit": 2,
                 "number": {"value": 160, "density": {"enable": true, "value_area": 800}},
                 "color": {"value": "#ffffff"},
                 "shape": {
