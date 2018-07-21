@@ -64,7 +64,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "55ca07554cf8ed608a74";
+/******/ 	var hotCurrentHash = "0265c558286dd64a11db";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -35811,6 +35811,8 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -35830,7 +35832,16 @@ var styles = {
     },
     imageIcon: {
         fontSize: "32px"
+    },
+    infoBox: {
+        overflow: "hidden"
     }
+};
+
+var mapStateToProps = function mapStateToProps(state) {
+    return {
+        song: state.playingNow
+    };
 };
 
 var NowPlayingItem = function (_Component) {
@@ -35844,13 +35855,15 @@ var NowPlayingItem = function (_Component) {
 
     _createClass(NowPlayingItem, [{
         key: "onOptionsButtonClick",
-        value: function onOptionsButtonClick() {
-            alert("onOptionsButtonClick: " + this.props.song.Title);
-        }
+        value: function onOptionsButtonClick() {}
     }, {
         key: "render",
         value: function render() {
             var _this2 = this;
+
+            var song = this.props.song || null;
+
+            if (!song) return null;
 
             return _react2.default.createElement(
                 "div",
@@ -35864,7 +35877,7 @@ var NowPlayingItem = function (_Component) {
                         _react2.default.createElement(
                             "div",
                             {
-                                className: "d-flex justify-content-center align-items-center",
+                                className: "d-flex justify-content-center align-items-center bg-light text-dark",
                                 style: styles.imageBox
                             },
                             _react2.default.createElement("i", {
@@ -35889,21 +35902,21 @@ var NowPlayingItem = function (_Component) {
                     ),
                     _react2.default.createElement(
                         "div",
-                        { className: "media-body" },
+                        { className: "media-body", style: styles.infoBox },
                         _react2.default.createElement(
                             "h5",
-                            null,
-                            this.props.song.Title
+                            { className: "text-truncate" },
+                            song.Title
                         ),
                         _react2.default.createElement(
                             "h6",
-                            null,
-                            this.props.song.Artist
+                            { className: "text-truncate" },
+                            song.Artist
                         ),
                         _react2.default.createElement(
                             "h6",
-                            null,
-                            this.props.song.Album
+                            { className: "text-truncate" },
+                            song.Album
                         )
                     )
                 )
@@ -35914,7 +35927,7 @@ var NowPlayingItem = function (_Component) {
     return NowPlayingItem;
 }(_react.Component);
 
-exports.default = NowPlayingItem;
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(NowPlayingItem);
 
 /***/ }),
 
@@ -35977,7 +35990,7 @@ var PlaylistInfo = function (_Component) {
                     _react2.default.createElement(
                         "div",
                         {
-                            className: "d-flex justify-content-center align-items-center m-auto bg-light",
+                            className: "d-flex justify-content-center align-items-center m-auto bg-dark text-light",
                             style: styles.imageBox
                         },
                         _react2.default.createElement("i", { className: "fas fa-music", style: styles.imageIcon })
@@ -36084,20 +36097,6 @@ var Sidebar = function (_Component) {
     _createClass(Sidebar, [{
         key: "render",
         value: function render() {
-            // TODO: move to store
-            var song = {
-                ID: "2",
-                ClassName: "Model\\Song",
-                LastEdited: "2018-07-18 21:03:44",
-                Created: "2018-07-18 21:03:44",
-                Title: "Refrain",
-                Length: "532.90",
-                Artist: "Anan Ryoko",
-                Album: "Eternal Light",
-                Disc: 1,
-                Track: 7
-            };
-
             // noinspection HtmlUnknownTarget
             return _react2.default.createElement(
                 "div",
@@ -36107,7 +36106,7 @@ var Sidebar = function (_Component) {
                 },
                 _react2.default.createElement(
                     "div",
-                    { className: "mb-2", style: { height: 50 } },
+                    { className: "container mb-2 mt-3" },
                     _react2.default.createElement(
                         "h3",
                         null,
@@ -36152,7 +36151,7 @@ var Sidebar = function (_Component) {
                         "Log Out"
                     )
                 ),
-                _react2.default.createElement(_NowPlayingItem2.default, { song: song, style: styles.nowPlayingItem })
+                _react2.default.createElement(_NowPlayingItem2.default, { style: styles.nowPlayingItem })
             );
         }
     }]);

@@ -1,11 +1,12 @@
 // @flow
 import React, { Component } from "react";
-import type { Song } from '../models/Song'
+import type { Song } from "../models/Song";
+import { connect } from "react-redux";
 
 type Props = {
     className?: string,
     style?: Object,
-    song: Song
+    song?: Song
 };
 
 const styles = {
@@ -19,21 +20,32 @@ const styles = {
     },
     imageIcon: {
         fontSize: "32px"
+    },
+    infoBox: {
+        overflow: "hidden"
     }
 };
 
+const mapStateToProps = state => {
+    return {
+        song: state.playingNow
+    };
+};
+
 class NowPlayingItem extends Component<Props> {
-    onOptionsButtonClick() {
-        alert(`onOptionsButtonClick: ${this.props.song.Title}`);
-    }
+    onOptionsButtonClick() {}
 
     render() {
+        const song = this.props.song || null;
+
+        if (!song) return null;
+
         return (
             <div className={this.props.className} style={this.props.style}>
                 <div className="media pt-3 pl-2 pr-2">
                     <div className="d-flex flex-column mr-3">
                         <div
-                            className="d-flex justify-content-center align-items-center"
+                            className="d-flex justify-content-center align-items-center bg-light text-dark"
                             style={styles.imageBox}
                         >
                             <i
@@ -49,10 +61,10 @@ class NowPlayingItem extends Component<Props> {
                         </div>
                     </div>
 
-                    <div className="media-body">
-                        <h5>{this.props.song.Title}</h5>
-                        <h6>{this.props.song.Artist}</h6>
-                        <h6>{this.props.song.Album}</h6>
+                    <div className="media-body" style={styles.infoBox}>
+                        <h5 className="text-truncate">{song.Title}</h5>
+                        <h6 className="text-truncate">{song.Artist}</h6>
+                        <h6 className="text-truncate">{song.Album}</h6>
                     </div>
                 </div>
             </div>
@@ -60,4 +72,4 @@ class NowPlayingItem extends Component<Props> {
     }
 }
 
-export default NowPlayingItem;
+export default connect(mapStateToProps)(NowPlayingItem);

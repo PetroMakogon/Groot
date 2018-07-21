@@ -24,7 +24,7 @@ class PlaylistInfo extends Component<Props> {
             <div className={this.props.className} style={this.props.style}>
                 <div className="card text-center bg-transparent">
                     <div
-                        className="d-flex justify-content-center align-items-center m-auto bg-light"
+                        className="d-flex justify-content-center align-items-center m-auto bg-dark text-light"
                         style={styles.imageBox}
                     >
                         <i className="fas fa-music" style={styles.imageIcon} />
