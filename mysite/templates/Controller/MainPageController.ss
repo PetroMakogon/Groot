@@ -10,14 +10,15 @@
           integrity="sha384-S2gVFTIn1tJ/Plf+40+RRAxBCiBU5oAMFUJxTXT3vOlxtXm7MGjVj62mDpbujs4C" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/fontawesome.css"
           integrity="sha384-0b7ERybvrT5RZyD80ojw6KNKz6nIAlgOKXIcJ0CV7A6Iia8yt2y1bBfLBOwoc9fQ" crossorigin="anonymous">
+    <link rel="stylesheet" href="/public/css/bootstrap.min.css">
     $MetaTags(false)
 </head>
-<body style="width: 100%; height: 100%; position: absolute;">
-<div id="particles-js" style="position: fixed; width: 100%; height: 100%"></div>
-<div id="root" style="width: 100%; height: 100%; position: absolute;">
+<body class="w-100 h-100 position-absolute">
+<div id="particles-js" class="w-100 h-100 position-fixed"></div>
+<div id="root" class="w-100 h-100 position-absolute">
 </div>
 
-<script src="scripts/particles.js"></script>
+<script src="/public/scripts/particles.js"></script>
 <script>
     window.addEventListener('load', function () {
         particlesJS("particles-js", {

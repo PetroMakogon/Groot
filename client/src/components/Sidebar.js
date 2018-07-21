@@ -17,7 +17,7 @@ const styles = {
         position: "absolute",
         bottom: 0,
         left: 0,
-        height: 160,
+        height: 110,
         width: "100%",
         background: "#555"
     }
@@ -59,22 +59,24 @@ class Sidebar extends Component<Props> {
                     </button>
                     <button
                         type="button"
+                        disabled={true}
                         className="list-group-item list-group-item-action"
                     >
                         Playlist
                     </button>
-                    <button
-                        type="button"
-                        className="list-group-item list-group-item-action"
+                    <a
+                        className="btn list-group-item list-group-item-action"
+                        href="/admin"
+                        target="_blank"
                     >
                         Admin
-                    </button>
-                    <button
-                        type="button"
-                        className="list-group-item list-group-item-action"
+                    </a>
+                    <a
+                        className="btn list-group-item list-group-item-action"
+                        href="/Security/Logout"
                     >
                         Log Out
-                    </button>
+                    </a>
                 </div>
 
                 <NowPlayingItem song={song} style={styles.nowPlayingItem} />

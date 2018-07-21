@@ -1,32 +1,32 @@
 import React, { Component } from "react";
-import "../css/bootstrap.min.css";
 import Sidebar from "./components/Sidebar";
 import MainArea from "./components/MainArea";
+import BottomBar from "./components/BottomBar";
 
 const styles = {
     mainContainer: {
-        height: "100%"
+        paddingBottom: 54
     },
     bottomBar: {
-        position: "absolute",
         bottom: 0,
         left: 0,
-        width: "100%",
-        height: 50,
-        background: '#ccc'
+        height: 54
     }
 };
 
 class App extends Component {
     render() {
         return (
-            <div className="container-fluid" style={styles.mainContainer}>
-                <div className="row" style={styles.mainContainer}>
+            <div className="container-fluid h-100" style={styles.mainContainer}>
+                <div className="row h-100">
                     <Sidebar className="col-sm-2" />
                     <MainArea className="col-sm-10" />
                 </div>
 
-                <div style={styles.bottomBar}/>
+                <BottomBar
+                    className="w-100 bg-light position-absolute"
+                    style={styles.bottomBar}
+                />
             </div>
         );
     }
