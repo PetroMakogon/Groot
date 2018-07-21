@@ -20,6 +20,8 @@ const styles = {
 
 class PlaylistInfo extends Component<Props> {
     render() {
+        const songs = this.props.playlist.Songs || [];
+
         return (
             <div className={this.props.className} style={this.props.style}>
                 <div className="card text-center bg-transparent">
@@ -35,7 +37,7 @@ class PlaylistInfo extends Component<Props> {
                             {this.props.playlist.Title}
                         </h5>
                         <h6 className="card-subtitle">
-                            {this.props.playlist.NumberOfSongs} songs
+                            {songs.length} songs
                         </h6>
                         <p className="card-text">
                             {this.props.playlist.Description}

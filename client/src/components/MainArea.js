@@ -32,7 +32,7 @@ class MainArea extends Component<Props> {
             ID: "0",
             Title: "All Songs",
             Description: "",
-            NumberOfSongs: songs.length,
+            Songs: songs
         };
 
         return (
