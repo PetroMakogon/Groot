@@ -1,12 +1,21 @@
 // @flow
 import React, { Component } from "react";
 import type { Song } from "../models/Song";
+import { connect } from "react-redux";
+import { store } from "../store";
+import { changePlayingNow } from "../actions/changePlayingNow";
 
-type Props = {
+type ReduxProps = {
+    isPlayingNow?: boolean
+};
+
+type OwnProps = {
     className?: string,
     style?: Object,
     song: Song
 };
+
+type Props = ReduxProps & OwnProps;
 
 type State = {
     mouseOver: boolean
@@ -20,6 +29,13 @@ const styles = {
         width: 24,
         height: 24
     }
+};
+
+const mapStateToProps = (state, props: OwnProps) => {
+    return {
+        isPlayingNow:
+            state.playingNow !== null && state.playingNow.ID === props.song.ID
+    };
 };
 
 class SongListItem extends Component<Props, State> {
@@ -43,7 +59,7 @@ class SongListItem extends Component<Props, State> {
     }
 
     onPlayButtonClick() {
-        alert(`onPlayButtonClick: ${this.props.song.Title}`);
+        store.dispatch(changePlayingNow(this.props.song));
     }
 
     onOptionsButtonClick() {
@@ -57,6 +73,10 @@ class SongListItem extends Component<Props, State> {
     }
 
     render() {
+        const borderClass = this.props.isPlayingNow
+            ? "border-light"
+            : "border-dark";
+
         return (
             <div
                 className={this.props.className}
@@ -65,7 +85,7 @@ class SongListItem extends Component<Props, State> {
                 onMouseOut={() => this.onMouseOut()}
             >
                 <div
-                    className="card border-dark rounded-0"
+                    className={`card ${borderClass} rounded-0 bg-transparent`}
                     style={styles.container}
                 >
                     <div className="card-body">
@@ -130,4 +150,4 @@ class SongListItem extends Component<Props, State> {
     }
 }
 
-export default SongListItem;
+export default connect(mapStateToProps)(SongListItem);

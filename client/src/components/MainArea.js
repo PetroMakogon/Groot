@@ -29,14 +29,10 @@ class MainArea extends Component<Props> {
         const songs: Array<Song> = this.props.songs || [];
 
         let playlist: Playlist = {
-            ID: "1",
-            ClassName: "Model\\Playlist",
-            LastEdited: "2018-07-18 23:48:20",
-            Created: "2018-07-18 23:48:20",
-            Title: "My Playlist",
-            Description: "The first playlist",
-            NumberOfSongs: 2,
-            Songs: []
+            ID: "0",
+            Title: "All Songs",
+            Description: "",
+            NumberOfSongs: songs.length,
         };
 
         return (
@@ -44,10 +40,10 @@ class MainArea extends Component<Props> {
                 <div className="container-fluid">
                     <div className="row">
                         <PlaylistInfo
-                            className="col-sm-3"
+                            className="col-sm-3 mt-3"
                             playlist={playlist}
                         />
-                        <SongList className="col-sm-9" songs={songs} />
+                        <SongList className="col-sm-9 mt-3" songs={songs} />
                     </div>
                 </div>
             </div>

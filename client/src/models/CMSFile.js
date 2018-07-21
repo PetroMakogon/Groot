@@ -2,21 +2,21 @@
 
 export type CMSFile = {
     id: number;
-    created: String | null;
-    lastEdited: String | null;
-    owner: String | null;
+    created: string | null;
+    lastEdited: string | null;
+    owner: string | null;
     parentId: number | null;
-    title: String | null;
+    title: string | null;
     exists: Boolean | null;
-    type: String | null;
-    category: String | null;
-    name: String | null;
-    filename: String | null;
-    extension: String | null;
+    type: string | null;
+    category: string | null;
+    name: string | null;
+    filename: string | null;
+    extension: string | null;
     size: number | null;
-    url: String | null;
-    thumbnail: String | null;
-    smallThumbnail: String | null;
+    url: string | null;
+    thumbnail: string | null;
+    smallThumbnail: string | null;
     width: number | null;
     height: number | null;
     canView: Boolean | null;

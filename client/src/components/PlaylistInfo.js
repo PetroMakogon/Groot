@@ -22,7 +22,7 @@ class PlaylistInfo extends Component<Props> {
     render() {
         return (
             <div className={this.props.className} style={this.props.style}>
-                <div className="card text-center">
+                <div className="card text-center bg-transparent">
                     <div
                         className="d-flex justify-content-center align-items-center m-auto bg-light"
                         style={styles.imageBox}

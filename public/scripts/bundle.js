@@ -64,7 +64,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "6cd425117d39c70d778c";
+/******/ 	var hotCurrentHash = "55ca07554cf8ed608a74";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -35454,6 +35454,33 @@ var ACTION_LOAD_ALL_SONGS = exports.ACTION_LOAD_ALL_SONGS = "ACTION_LOAD_ALL_SON
 var ACTION_LOADING_START = exports.ACTION_LOADING_START = "ACTION_LOADING_START";
 var ACTION_LOADING_STOP = exports.ACTION_LOADING_STOP = "ACTION_LOADING_STOP";
 var ACTION_SHOW_ERROR = exports.ACTION_SHOW_ERROR = "ACTION_SHOW_ERROR";
+var ACTION_CHANGE_PLAYING_NOW = exports.ACTION_CHANGE_PLAYING_NOW = "ACTION_CHANGE_PLAYING_NOW";
+
+/***/ }),
+
+/***/ "./src/actions/changePlayingNow.js":
+/*!*****************************************!*\
+  !*** ./src/actions/changePlayingNow.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.changePlayingNow = changePlayingNow;
+
+var _actionTypes = __webpack_require__(/*! ./actionTypes */ "./src/actions/actionTypes.js");
+
+function changePlayingNow(song) {
+    return {
+        type: _actionTypes.ACTION_CHANGE_PLAYING_NOW,
+        song: song
+    };
+}
 
 /***/ }),
 
@@ -35607,6 +35634,8 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -35614,6 +35643,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var mapStateToProps = function mapStateToProps(state) {
+    return {
+        playingNow: state.playingNow
+    };
+};
 
 var BottomBar = function (_Component) {
     _inherits(BottomBar, _Component);
@@ -35627,16 +35662,22 @@ var BottomBar = function (_Component) {
     _createClass(BottomBar, [{
         key: "render",
         value: function render() {
+            var playingNow = this.props.playingNow || null;
+            var url = playingNow && playingNow.StreamFile && playingNow.StreamFile.url || null;
+            var source = url ? _react2.default.createElement("source", { src: url, type: "audio/mp3" }) : null;
+
             return _react2.default.createElement(
                 "div",
                 { className: this.props.className, style: this.props.style },
                 _react2.default.createElement(
                     "audio",
-                    { className: "w-100 h-100", controls: "controls" },
-                    _react2.default.createElement("source", {
-                        src: "https://www.w3schools.com/html/horse.mp3",
-                        type: "audio/wav"
-                    })
+                    {
+                        key: url,
+                        className: "w-100 h-100",
+                        controls: "controls",
+                        autoPlay: true
+                    },
+                    source
                 )
             );
         }
@@ -35645,7 +35686,7 @@ var BottomBar = function (_Component) {
     return BottomBar;
 }(_react.Component);
 
-exports.default = BottomBar;
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(BottomBar);
 
 /***/ }),
 
@@ -35717,14 +35758,10 @@ var MainArea = function (_Component) {
             var songs = this.props.songs || [];
 
             var playlist = {
-                ID: "1",
-                ClassName: "Model\\Playlist",
-                LastEdited: "2018-07-18 23:48:20",
-                Created: "2018-07-18 23:48:20",
-                Title: "My Playlist",
-                Description: "The first playlist",
-                NumberOfSongs: 2,
-                Songs: []
+                ID: "0",
+                Title: "All Songs",
+                Description: "",
+                NumberOfSongs: songs.length
             };
 
             return _react2.default.createElement(
@@ -35737,10 +35774,10 @@ var MainArea = function (_Component) {
                         "div",
                         { className: "row" },
                         _react2.default.createElement(_PlaylistInfo2.default, {
-                            className: "col-sm-3",
+                            className: "col-sm-3 mt-3",
                             playlist: playlist
                         }),
-                        _react2.default.createElement(_SongList2.default, { className: "col-sm-9", songs: songs })
+                        _react2.default.createElement(_SongList2.default, { className: "col-sm-9 mt-3", songs: songs })
                     )
                 )
             );
@@ -35936,7 +35973,7 @@ var PlaylistInfo = function (_Component) {
                 { className: this.props.className, style: this.props.style },
                 _react2.default.createElement(
                     "div",
-                    { className: "card text-center" },
+                    { className: "card text-center bg-transparent" },
                     _react2.default.createElement(
                         "div",
                         {
@@ -36208,6 +36245,12 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+var _store = __webpack_require__(/*! ../store */ "./src/store.js");
+
+var _changePlayingNow = __webpack_require__(/*! ../actions/changePlayingNow */ "./src/actions/changePlayingNow.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -36224,6 +36267,12 @@ var styles = {
         width: 24,
         height: 24
     }
+};
+
+var mapStateToProps = function mapStateToProps(state, props) {
+    return {
+        isPlayingNow: state.playingNow !== null && state.playingNow.ID === props.song.ID
+    };
 };
 
 var SongListItem = function (_Component) {
@@ -36257,7 +36306,7 @@ var SongListItem = function (_Component) {
     }, {
         key: "onPlayButtonClick",
         value: function onPlayButtonClick() {
-            alert("onPlayButtonClick: " + this.props.song.Title);
+            _store.store.dispatch((0, _changePlayingNow.changePlayingNow)(this.props.song));
         }
     }, {
         key: "onOptionsButtonClick",
@@ -36268,6 +36317,8 @@ var SongListItem = function (_Component) {
         key: "render",
         value: function render() {
             var _this2 = this;
+
+            var borderClass = this.props.isPlayingNow ? "border-light" : "border-dark";
 
             return _react2.default.createElement(
                 "div",
@@ -36284,7 +36335,7 @@ var SongListItem = function (_Component) {
                 _react2.default.createElement(
                     "div",
                     {
-                        className: "card border-dark rounded-0",
+                        className: "card " + borderClass + " rounded-0 bg-transparent",
                         style: styles.container
                     },
                     _react2.default.createElement(
@@ -36366,7 +36417,7 @@ var SongListItem = function (_Component) {
     return SongListItem;
 }(_react.Component);
 
-exports.default = SongListItem;
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(SongListItem);
 
 /***/ }),
 
@@ -36429,7 +36480,6 @@ function allSongs() {
 
     switch (action.type) {
         case _actionTypes.ACTION_LOAD_ALL_SONGS:
-            console.log(action);
             if (action.data) {
                 return action.data;
             }
@@ -36474,6 +36524,40 @@ function loading() {
 
 /***/ }),
 
+/***/ "./src/reducers/playingNow.js":
+/*!************************************!*\
+  !*** ./src/reducers/playingNow.js ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.playingNow = playingNow;
+
+var _actionTypes = __webpack_require__(/*! ../actions/actionTypes */ "./src/actions/actionTypes.js");
+
+function playingNow() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+    var action = arguments[1];
+
+    switch (action.type) {
+        case _actionTypes.ACTION_CHANGE_PLAYING_NOW:
+            if (action.song) {
+                return action.song;
+            }
+            return state;
+        default:
+            return state;
+    }
+}
+
+/***/ }),
+
 /***/ "./src/reducers/root.js":
 /*!******************************!*\
   !*** ./src/reducers/root.js ***!
@@ -36495,9 +36579,12 @@ var _allSongs = __webpack_require__(/*! ./allSongs */ "./src/reducers/allSongs.j
 
 var _loading = __webpack_require__(/*! ./loading */ "./src/reducers/loading.js");
 
+var _playingNow = __webpack_require__(/*! ./playingNow */ "./src/reducers/playingNow.js");
+
 var root = exports.root = (0, _redux.combineReducers)({
     allSongs: _allSongs.allSongs,
-    loading: _loading.loading
+    loading: _loading.loading,
+    playingNow: _playingNow.playingNow
 });
 
 /***/ }),
