@@ -64,7 +64,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "0265c558286dd64a11db";
+/******/ 	var hotCurrentHash = "a4704738e3c3405f5c8b";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -35455,6 +35455,33 @@ var ACTION_LOADING_START = exports.ACTION_LOADING_START = "ACTION_LOADING_START"
 var ACTION_LOADING_STOP = exports.ACTION_LOADING_STOP = "ACTION_LOADING_STOP";
 var ACTION_SHOW_ERROR = exports.ACTION_SHOW_ERROR = "ACTION_SHOW_ERROR";
 var ACTION_CHANGE_PLAYING_NOW = exports.ACTION_CHANGE_PLAYING_NOW = "ACTION_CHANGE_PLAYING_NOW";
+var ACTION_CHANGE_CURRENT_PLAYLIST = exports.ACTION_CHANGE_CURRENT_PLAYLIST = "ACTION_CHANGE_CURRENT_PLAYLIST";
+
+/***/ }),
+
+/***/ "./src/actions/changeCurrentPlaylist.js":
+/*!**********************************************!*\
+  !*** ./src/actions/changeCurrentPlaylist.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.changeCurrentPlaylist = changeCurrentPlaylist;
+
+var _actionTypes = __webpack_require__(/*! ./actionTypes */ "./src/actions/actionTypes.js");
+
+function changeCurrentPlaylist(playlist) {
+    return {
+        type: _actionTypes.ACTION_CHANGE_CURRENT_PLAYLIST,
+        playlist: playlist
+    };
+}
 
 /***/ }),
 
@@ -35514,13 +35541,17 @@ var _stopLoading = __webpack_require__(/*! ./stopLoading */ "./src/actions/stopL
 
 var _showError = __webpack_require__(/*! ./showError */ "./src/actions/showError.js");
 
+var _changeCurrentPlaylist = __webpack_require__(/*! ./changeCurrentPlaylist */ "./src/actions/changeCurrentPlaylist.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function loadAllSongsAsync() {
     return function (dispatch) {
         dispatch((0, _startLoading.startLoading)());
+        changePlaylistToAllSong(dispatch, []);
         _FetchSongService2.default.fetchAllSongs().then(function (songs) {
             dispatch((0, _stopLoading.stopLoading)());
+            changePlaylistToAllSong(dispatch, songs);
             dispatch(loadAllSongs(songs));
         }).catch(function (error) {
             dispatch((0, _stopLoading.stopLoading)());
@@ -35528,12 +35559,23 @@ function loadAllSongsAsync() {
         });
     };
 }
-
 function loadAllSongs(data) {
     return {
         type: _actionTypes.ACTION_LOAD_ALL_SONGS,
         data: data
     };
+}
+
+function changePlaylistToAllSong(dispatch) {
+    var songs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+    var playlist = {
+        ID: "0",
+        Title: "All Songs",
+        Description: "",
+        Songs: songs
+    };
+    dispatch((0, _changeCurrentPlaylist.changeCurrentPlaylist)(playlist));
 }
 
 /***/ }),
@@ -35636,6 +35678,10 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 
+var _store = __webpack_require__(/*! ../store */ "./src/store.js");
+
+var _changePlayingNow = __webpack_require__(/*! ../actions/changePlayingNow */ "./src/actions/changePlayingNow.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -35660,8 +35706,21 @@ var BottomBar = function (_Component) {
     }
 
     _createClass(BottomBar, [{
+        key: "playNextSong",
+        value: function playNextSong() {
+            var song = _store.store.getState().playingNow;
+            var playlist = _store.store.getState().currentPlaylist;
+            var currentIndex = playlist.Songs.indexOf(song);
+            var nextIndex = currentIndex + 1;
+            if (nextIndex >= playlist.Songs.length) return;
+            var nextSong = playlist.Songs[nextIndex];
+            _store.store.dispatch((0, _changePlayingNow.changePlayingNow)(nextSong));
+        }
+    }, {
         key: "render",
         value: function render() {
+            var _this2 = this;
+
             var playingNow = this.props.playingNow || null;
             var url = playingNow && playingNow.StreamFile && playingNow.StreamFile.url || null;
             var source = url ? _react2.default.createElement("source", { src: url, type: "audio/mp3" }) : null;
@@ -35675,7 +35734,10 @@ var BottomBar = function (_Component) {
                         key: url,
                         className: "w-100 h-100",
                         controls: "controls",
-                        autoPlay: true
+                        autoPlay: true,
+                        onEnded: function onEnded() {
+                            return _this2.playNextSong();
+                        }
                     },
                     source
                 )
@@ -35761,7 +35823,7 @@ var MainArea = function (_Component) {
                 ID: "0",
                 Title: "All Songs",
                 Description: "",
-                NumberOfSongs: songs.length
+                Songs: songs
             };
 
             return _react2.default.createElement(
@@ -35981,6 +36043,8 @@ var PlaylistInfo = function (_Component) {
     _createClass(PlaylistInfo, [{
         key: "render",
         value: function render() {
+            var songs = this.props.playlist.Songs || [];
+
             return _react2.default.createElement(
                 "div",
                 { className: this.props.className, style: this.props.style },
@@ -36006,7 +36070,7 @@ var PlaylistInfo = function (_Component) {
                         _react2.default.createElement(
                             "h6",
                             { className: "card-subtitle" },
-                            this.props.playlist.NumberOfSongs,
+                            songs.length,
                             " songs"
                         ),
                         _react2.default.createElement(
@@ -36490,6 +36554,40 @@ function allSongs() {
 
 /***/ }),
 
+/***/ "./src/reducers/currentPlaylist.js":
+/*!*****************************************!*\
+  !*** ./src/reducers/currentPlaylist.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.currentPlaylist = currentPlaylist;
+
+var _actionTypes = __webpack_require__(/*! ../actions/actionTypes */ "./src/actions/actionTypes.js");
+
+function currentPlaylist() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+    var action = arguments[1];
+
+    switch (action.type) {
+        case _actionTypes.ACTION_CHANGE_CURRENT_PLAYLIST:
+            if (action.playlist) {
+                return action.playlist;
+            }
+            return state;
+        default:
+            return state;
+    }
+}
+
+/***/ }),
+
 /***/ "./src/reducers/loading.js":
 /*!*********************************!*\
   !*** ./src/reducers/loading.js ***!
@@ -36580,10 +36678,13 @@ var _loading = __webpack_require__(/*! ./loading */ "./src/reducers/loading.js")
 
 var _playingNow = __webpack_require__(/*! ./playingNow */ "./src/reducers/playingNow.js");
 
+var _currentPlaylist = __webpack_require__(/*! ./currentPlaylist */ "./src/reducers/currentPlaylist.js");
+
 var root = exports.root = (0, _redux.combineReducers)({
     allSongs: _allSongs.allSongs,
     loading: _loading.loading,
-    playingNow: _playingNow.playingNow
+    playingNow: _playingNow.playingNow,
+    currentPlaylist: _currentPlaylist.currentPlaylist
 });
 
 /***/ }),

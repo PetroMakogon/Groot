@@ -2,6 +2,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import type { Song } from "../models/Song";
+import { store } from "../store";
+import { changePlayingNow } from "../actions/changePlayingNow";
 
 type Props = {
     className?: string,
@@ -16,6 +18,16 @@ const mapStateToProps = state => {
 };
 
 class BottomBar extends Component<Props> {
+    playNextSong() {
+        const song = store.getState().playingNow;
+        const playlist = store.getState().currentPlaylist;
+        const currentIndex = playlist.Songs.indexOf(song);
+        const nextIndex = currentIndex + 1;
+        if (nextIndex >= playlist.Songs.length) return;
+        const nextSong = playlist.Songs[nextIndex];
+        store.dispatch(changePlayingNow(nextSong));
+    }
+
     render() {
         const playingNow = this.props.playingNow || null;
         const url =
@@ -33,6 +45,7 @@ class BottomBar extends Component<Props> {
                     className="w-100 h-100"
                     controls="controls"
                     autoPlay
+                    onEnded={() => this.playNextSong()}
                 >
                     {source}
                 </audio>
