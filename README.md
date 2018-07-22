@@ -11,7 +11,7 @@ I encountered two problems in my life:
 
 These two problems stop me from enjoying music online. But I enjoy the experience when there is an online platform, so I decided to build one by myself. If you are under the same situation, this project is for you too :)
 
-By the way, this is a side project to practice some new skills that may be required by my next job, so I didn't choose the mainstream techniques that I am already familiar with. 
+By the way, this is a side project to practice some new skills that may be required by my next job, so I didn't choose some of the mainstream techniques that I am already familiar with. 
 
 > Notice: This is still a project under WIP stage, but welcome to use it anyway :)
 
@@ -47,7 +47,7 @@ After a batch upload job is created, the program will start to extract informati
 
 - Backend: Silverstripe 4
 - API: GraphQL + Apollo
-- Web: React + Redux
+- Web: React + Redux + Bootstrap 4
 
 ### Deploy on AWS EC2
 
