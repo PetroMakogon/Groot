@@ -1,6 +1,9 @@
 // @flow
 import React, { Component } from "react";
-import type { Playlist } from '../models/Playlist'
+import type { Playlist } from "../models/Playlist";
+import { store } from "../store";
+import { changeCurrentPlaylist } from "../actions/changeCurrentPlaylist";
+import { changePlayingNow } from "../actions/changePlayingNow";
 
 type Props = {
     className?: string,
@@ -11,7 +14,7 @@ type Props = {
 const styles = {
     imageBox: {
         width: 100,
-        height: 100,
+        height: 100
     },
     imageIcon: {
         fontSize: "32px"
@@ -19,6 +22,15 @@ const styles = {
 };
 
 class PlaylistInfo extends Component<Props> {
+    playThisList() {
+        const songs = this.props.playlist.Songs || [];
+        const song = songs[0] || null;
+        if (!song) return;
+
+        store.dispatch(changeCurrentPlaylist(this.props.playlist));
+        store.dispatch(changePlayingNow(song));
+    }
+
     render() {
         const songs = this.props.playlist.Songs || [];
 
@@ -36,13 +48,14 @@ class PlaylistInfo extends Component<Props> {
                         <h5 className="card-title">
                             {this.props.playlist.Title}
                         </h5>
-                        <h6 className="card-subtitle">
-                            {songs.length} songs
-                        </h6>
+                        <h6 className="card-subtitle">{songs.length} songs</h6>
                         <p className="card-text">
                             {this.props.playlist.Description}
                         </p>
-                        <button className="btn btn-primary btn-lg rounded-0 w-100">
+                        <button
+                            className="btn btn-primary btn-lg rounded-0 w-100"
+                            onClick={() => this.playThisList()}
+                        >
                             Play
                         </button>
                         <br />
