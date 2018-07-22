@@ -1,5 +1,18 @@
 # ReadMe
 
+`Groot` is a software that hosts and serves your music files on the cloud just like other online music services, but allow you to build a self-hosted platform.
+
+## Why I build it?
+
+I encountered two problems in my life:
+
+1. My favorite online music service stopped serving me because I am oversea (IP issues: they limit the service according to my IP address due to `Intellectual Property` reason).
+2. The online service platform removes songs now and then. After I add some music into my playlist, it becomes unavailable after several months.
+
+These two problems stop me from enjoying music online. But I enjoy the experience when there is an online platform, so I decided to build one by myself. If you are under the same situation, this project is for you too :)
+
+By the way, this is a side project to practice some new skills that may be required by my next job, so I didn't choose the mainstream techniques that I am already familiar with. 
+
 > Notice: This is still a project under WIP stage, but welcome to use it anyway :)
 
 ## Screenshot
@@ -12,7 +25,7 @@
 
 #### Add a song
 
-You can choose to extrat information included in the mp3 file.
+You can choose to extract information included in the mp3 file.
 
 ![24592e56.png](README.assets/24592e56.png)
 
@@ -72,7 +85,7 @@ SS_ENVIRONMENT_TYPE="dev"
 SS_DEFAULT_ADMIN_USERNAME="admin" # your admin username
 SS_DEFAULT_ADMIN_PASSWORD="admin" # your admin password
 
-# Blow can be igonred for now
+# Blow can be ignored for now
 #JWT_PREFIX=<YOUR_PREFIX>
 #JWT_SIGNER_KEY=<YOUR_SIGNER_KEY>
 ```
