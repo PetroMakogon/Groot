@@ -2,7 +2,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import AllSongs from "./MainArea/AllSongs";
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch, withRouter } from "react-router-dom";
+import AllPlaylists from "./MainArea/AllPlaylists";
 
 type Props = {
     className?: string,
@@ -21,12 +22,12 @@ class MainArea extends Component<Props> {
                                 return <AllSongs className={"row"} />;
                             }}
                         />
-                      <Route
-                        path="/playlist"
-                        render={() => {
-                          return <div>/playlist</div>;
-                        }}
-                      />
+                        <Route
+                            path="/playlist"
+                            render={() => {
+                                return <AllPlaylists className={"row"} />;
+                            }}
+                        />
                     </Switch>
                 </div>
             </div>

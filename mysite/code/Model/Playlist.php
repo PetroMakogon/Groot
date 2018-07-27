@@ -12,6 +12,7 @@ use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Security\Permission;
 
 /**
  * Class Playlist
@@ -69,16 +70,15 @@ class Playlist extends DataObject implements ScaffoldingProvider
      */
     private function provideGraphQLScaffoldingCRUD(SchemaScaffolder $schema): void
     {
-        $playlist = $schema->type(Playlist::class)->addAllFields(true);
+        $playlist = $schema->type(Playlist::class)->addAllFields();
+        /* @var $readSongs ListQueryScaffolder */
+        $readSongs = $playlist->nestedQuery('Songs');
+        $readSongs->setUsePagination(false);
 
         /* @var $readPlaylists ListQueryScaffolder */
         $readPlaylists = $playlist->operation(SchemaScaffolder::READ);
         $readPlaylists->addSortableFields(['Title']);
         $readPlaylists->setUsePagination(false);
-
-        /* @var $readSongs ListQueryScaffolder */
-        $readSongs = $playlist->nestedQuery('Songs');
-        $readSongs->setUsePagination(false);
 
         $playlist->operation(SchemaScaffolder::READ_ONE);
         $playlist->operation(SchemaScaffolder::CREATE);

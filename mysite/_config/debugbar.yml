@@ -5,4 +5,4 @@ LeKoala\DebugBar\DebugBar:
   disabled: true
   enabled_in_admin: false
   check_local_ip: false
-  enable_storage: false
+  enable_storage: true

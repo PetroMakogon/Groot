@@ -10,7 +10,7 @@
           integrity="sha384-S2gVFTIn1tJ/Plf+40+RRAxBCiBU5oAMFUJxTXT3vOlxtXm7MGjVj62mDpbujs4C" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/fontawesome.css"
           integrity="sha384-0b7ERybvrT5RZyD80ojw6KNKz6nIAlgOKXIcJ0CV7A6Iia8yt2y1bBfLBOwoc9fQ" crossorigin="anonymous">
-    <link rel="stylesheet" href="/public/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
     $MetaTags(false)
 </head>
 <body class="w-100 h-100 position-absolute">
@@ -18,7 +18,7 @@
 <div id="root" class="w-100 h-100 position-absolute">
 </div>
 
-<script src="/public/scripts/particles.js"></script>
+<script src="/scripts/particles.js"></script>
 <script>
     window.addEventListener('load', function () {
         particlesJS("particles-js", {
