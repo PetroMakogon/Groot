@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from "react";
 import NowPlayingItem from "./NowPlayingItem";
+import { NavLink } from "react-router-dom";
 
 type Props = {
     className?: string,
@@ -37,19 +38,18 @@ class Sidebar extends Component<Props> {
                     <h3>Groot</h3>
                 </div>
                 <div className="list-group list-group-flush">
-                    <button
-                        type="button"
-                        className="list-group-item list-group-item-action active"
+                    <NavLink
+                        to="/all-songs"
+                        className="list-group-item list-group-item-action"
                     >
                         All Songs
-                    </button>
-                    <button
-                        type="button"
-                        disabled={true}
+                    </NavLink>
+                    <NavLink
+                        to="/playlist"
                         className="list-group-item list-group-item-action"
                     >
                         Playlist
-                    </button>
+                    </NavLink>
                     <a
                         className="btn list-group-item list-group-item-action"
                         href="/admin"

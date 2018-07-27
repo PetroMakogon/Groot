@@ -19,12 +19,13 @@
   "dependencies": {
     "apollo-boost": "^0.1.10",
     "graphql": "^0.13.2",
+    "graphql-tag": "latest",
     "npm": "^6.2.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-redux": "^5.0.7",
+    "react-router-dom": "^4.3.1",
     "redux": "^4.0.0",
-    "redux-thunk": "^2.3.0",
-    "graphql-tag": "latest"
+    "redux-thunk": "^2.3.0"
   }
 }

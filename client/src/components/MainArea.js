@@ -1,54 +1,37 @@
 // @flow
 import React, { Component } from "react";
-import PlaylistInfo from "./PlaylistInfo";
-import SongList from "./SongList";
-import { store } from "../store";
-import { loadAllSongsAsync } from "../actions/loadAllSongs";
-import type { Song } from "../models/Song";
-import type { Playlist } from "../models/Playlist";
-import { connect } from 'react-redux'
+import { connect } from "react-redux";
+import AllSongs from "./MainArea/AllSongs";
+import { Route, Switch, withRouter } from 'react-router-dom'
 
 type Props = {
     className?: string,
-    style?: Object,
-    songs?: Array<Song>
-};
-
-const mapStateToProps = state => {
-    return {
-        songs: state.allSongs
-    };
+    style?: Object
 };
 
 class MainArea extends Component<Props> {
-    componentDidMount() {
-        store.dispatch(loadAllSongsAsync());
-    }
-
     render() {
-        const songs: Array<Song> = this.props.songs || [];
-
-        let playlist: Playlist = {
-            ID: "0",
-            Title: "All Songs",
-            Description: "",
-            Songs: songs
-        };
-
         return (
             <div className={this.props.className} style={this.props.style}>
                 <div className="container-fluid">
-                    <div className="row">
-                        <PlaylistInfo
-                            className="col-sm-3 mt-3"
-                            playlist={playlist}
+                    <Switch>
+                        <Route
+                            path="/all-songs"
+                            render={() => {
+                                return <AllSongs className={"row"} />;
+                            }}
                         />
-                        <SongList className="col-sm-9 mt-3" songs={songs} />
-                    </div>
+                      <Route
+                        path="/playlist"
+                        render={() => {
+                          return <div>/playlist</div>;
+                        }}
+                      />
+                    </Switch>
                 </div>
             </div>
         );
     }
 }
 
-export default connect(mapStateToProps)(MainArea);
+export default withRouter(connect()(MainArea));
