@@ -49,28 +49,29 @@ class PlaylistItem extends Component<Props> {
                 <div
                     className={`card ${borderClass} rounded-0 bg-transparent w-100`}
                 >
-                    <div className="card-body">
-                        <div className="row text-light">
-                            <div className="col-sm-10">
-                                <h5 className="card-title">
-                                    <div
-                                        onClick={() =>
-                                            this.props.changeCurrentPlaylist()
-                                        }
-                                    >
-                                        {this.props.playlist.Title}
-                                    </div>
-                                </h5>
-                            </div>
-                            <div className="col-sm-2">
-                                {this.props.playlist.Songs &&
-                                    this.props.playlist.Songs.length}
-                            </div>
+                    <div className="card-img-top">
+                        <div className="d-flex justify-content-center align-items-center m-auto bg-dark text-light w-100">
+                            <h1>
+                                <i className="fas fa-music" />
+                            </h1>
                         </div>
-
+                    </div>
+                    <div className="card-body">
+                        <h5 className="card-title">
+                            <div
+                                onClick={() =>
+                                    this.props.changeCurrentPlaylist()
+                                }
+                            >
+                                {this.props.playlist.Title}
+                            </div>
+                        </h5>
                         <h6 className="card-subtitle">
-                            Last edited at: {this.props.playlist.LastEdited}
+                            {this.props.playlist.NumberOfSongs} songs
                         </h6>
+                        <p className="card-text">
+                            Last edited at: {this.props.playlist.LastEdited}
+                        </p>
                     </div>
                 </div>
             </div>

@@ -12,7 +12,6 @@ use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
-use SilverStripe\Security\Permission;
 
 /**
  * Class Playlist
@@ -20,6 +19,7 @@ use SilverStripe\Security\Permission;
  *
  * @property string $Title
  * @property string $Description
+ * @property integer $NumberOfSongs
  * @method ManyManyList Songs()
  */
 class Playlist extends DataObject implements ScaffoldingProvider
@@ -27,8 +27,9 @@ class Playlist extends DataObject implements ScaffoldingProvider
     private static $table_name = 'Playlist';
 
     private static $db = [
-        'Title'       => 'Varchar(255)',
-        'Description' => 'Varchar(255)'
+        'Title'         => 'Varchar(255)',
+        'Description'   => 'Varchar(255)',
+        'NumberOfSongs' => 'Int'
     ];
 
     private static $many_many = [
@@ -44,6 +45,13 @@ class Playlist extends DataObject implements ScaffoldingProvider
         }
 
         return $result;
+    }
+
+    protected function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+
+        $this->NumberOfSongs = $this->Songs()->count();
     }
 
     /**

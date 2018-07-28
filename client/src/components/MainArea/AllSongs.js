@@ -6,6 +6,7 @@ import { loadAllSongsAsync } from "../../actions/loadAllSongs";
 import type { Playlist } from "../../models/Playlist";
 import PlaylistInfo from "../PlaylistInfo";
 import SongList from "../SongList";
+import type { RootState } from '../../reducers/root'
 
 type Props = {
     className?: string,
@@ -14,7 +15,7 @@ type Props = {
     dispatchLoadAllSongsAsyncAction?: () => void
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: RootState) => {
     return {
         songs: state.allSongs
     };
@@ -47,8 +48,8 @@ class AllSongs extends Component<Props> {
 
         return (
             <div className={this.props.className} style={this.props.style}>
-                <PlaylistInfo className="col-sm-3 mt-3" playlist={playlist} />
-                <SongList className="col-sm-9 mt-3" songs={songs} />
+                <PlaylistInfo className="col-sm-3" playlist={playlist} />
+                <SongList className="col-sm-9" songs={songs} />
             </div>
         );
     }

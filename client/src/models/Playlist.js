@@ -1,6 +1,6 @@
 // @flow
 
-import type { Song } from './Song'
+import type { Song } from "./Song";
 
 export type Playlist = {
     ID: string,
@@ -9,4 +9,5 @@ export type Playlist = {
     Title?: string,
     Description?: string,
     Songs?: Array<Song>,
+    NumberOfSongs?: number
 };

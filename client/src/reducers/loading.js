@@ -4,7 +4,9 @@ import {
     ACTION_LOADING_STOP
 } from "../actions/actionTypes";
 
-export function loading(state: number = 0, action: *) {
+export type LoadingState = number;
+
+export function loading(state: LoadingState = 0, action: *) {
     switch (action.type) {
         case ACTION_LOADING_START:
             return state + 1;

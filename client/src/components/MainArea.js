@@ -14,7 +14,7 @@ class MainArea extends Component<Props> {
     render() {
         return (
             <div className={this.props.className} style={this.props.style}>
-                <div className="container-fluid">
+                <div className="container-fluid pt-3">
                     <Switch>
                         <Route
                             path="/all-songs"
