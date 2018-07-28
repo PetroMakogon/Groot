@@ -4,13 +4,14 @@ import { connect } from "react-redux";
 import { changePlayingNow } from "../actions/changePlayingNow";
 import type { RootState } from "../reducers/root";
 import type { PlayingNowState } from "../reducers/playingNow";
+import type { Song } from "../models/Song";
 
 type Props = {
     className?: string,
     style?: Object
 } & {
     playingNow: PlayingNowState,
-    playNextSong: () => void
+    playNextSong: (song: Song, queue: Array<Song>) => void
 };
 
 const mapStateToProps = (state: RootState) => {
@@ -19,12 +20,9 @@ const mapStateToProps = (state: RootState) => {
     };
 };
 
-const mapDispatchToProps = (dispatch: *, props: Props) => {
+const mapDispatchToProps = (dispatch: *) => {
     return {
-        playNextSong: () => {
-            const song = props.playingNow.song;
-            const queue = props.playingNow.queue;
-
+        playNextSong: (song: Song, queue: Array<Song>) => {
             const currentIndex = queue.indexOf(song);
             const nextIndex = currentIndex + 1;
             if (nextIndex >= queue.length) return;
@@ -49,7 +47,10 @@ class BottomBar extends Component<Props> {
                     controls="controls"
                     autoPlay
                     onEnded={() => {
-                        this.props.playNextSong();
+                        this.props.playNextSong(
+                            this.props.playingNow.song,
+                            this.props.playingNow.queue
+                        );
                     }}
                 >
                     {source}

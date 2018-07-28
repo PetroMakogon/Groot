@@ -14,7 +14,7 @@ class SongList extends Component<Props> {
         return (
             <div className={this.props.className} style={this.props.style}>
                 {this.props.songs.map(song => {
-                    return <SongListItem key={song.ID} song={song} />;
+                    return <SongListItem key={song.ID} song={song} queue={this.props.songs} />;
                 })}
             </div>
         );

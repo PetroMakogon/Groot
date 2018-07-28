@@ -8,10 +8,10 @@ import type { RootState } from "../reducers/root";
 type Props = {
     className?: string,
     style?: Object,
-    song: Song
+    song: Song,
+    queue: Array<Song>
 } & {
     isPlayingNow: boolean,
-    playingQueue: Array<Song>,
     playThisSong: () => void
 };
 
@@ -40,9 +40,7 @@ const mapStateToProps = (state: RootState, props: Props) => {
 const mapDispatchToProps = (dispatch: *, props: Props) => {
     return {
         playThisSong: () => {
-            const song = props.song;
-            const queue = props.playingQueue;
-            dispatch(changePlayingNow(song, queue));
+            dispatch(changePlayingNow(props.song, props.queue));
         }
     };
 };

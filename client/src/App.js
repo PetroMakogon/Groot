@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from "react";
 import Sidebar from "./components/Sidebar";
 import MainArea from "./components/MainArea";
@@ -17,7 +18,9 @@ const styles = {
     }
 };
 
-class App extends Component {
+
+class App extends Component<*> {
+
     render() {
         return (
             <div className="container-fluid h-100" style={styles.mainContainer}>
