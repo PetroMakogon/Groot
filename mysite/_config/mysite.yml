@@ -21,3 +21,8 @@ SilverStripe\GraphQL\Controller:
     scaffolding_providers:
       - Model\Song
       - Model\Playlist
+
+Firesphere\GraphQLJWT\Authentication\JWTAuthenticator:
+  nbf_time: 0
+  nbf_expiration: 2592000 # 1 month
+  anonymous_allowed: false
