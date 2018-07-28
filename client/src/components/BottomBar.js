@@ -1,53 +1,43 @@
 // @flow
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import type { Song } from "../models/Song";
-import { store } from "../store";
 import { changePlayingNow } from "../actions/changePlayingNow";
 import type { RootState } from "../reducers/root";
-import { loadAllPlaylistsAsync } from "../actions/loadAllPlaylists";
-import type { CurrentPlaylistState } from "../reducers/currentPlaylist";
 import type { PlayingNowState } from "../reducers/playingNow";
 
 type Props = {
     className?: string,
-    style?: Object,
-    playingNow?: PlayingNowState,
-    currentPlaylist?: CurrentPlaylistState,
-    playNextSong?: () => void
+    style?: Object
+} & {
+    playingNow: PlayingNowState,
+    playNextSong: () => void
 };
 
 const mapStateToProps = (state: RootState) => {
     return {
-        playingNow: state.playingNow,
-        currentPlaylist: state.currentPlaylist
+        playingNow: state.playingNow
     };
 };
 
 const mapDispatchToProps = (dispatch: *, props: Props) => {
     return {
         playNextSong: () => {
-            const song = props.playingNow;
-            const playlist = props.currentPlaylist;
-            const songs = playlist ? playlist.Songs || [] : [];
+            const song = props.playingNow.song;
+            const queue = props.playingNow.queue;
 
-            const currentIndex = songs.indexOf(song);
+            const currentIndex = queue.indexOf(song);
             const nextIndex = currentIndex + 1;
-            if (nextIndex >= songs.length) return;
-            const nextSong = songs[nextIndex];
-            dispatch(changePlayingNow(nextSong));
+            if (nextIndex >= queue.length) return;
+            const nextSong = queue[nextIndex];
+            dispatch(changePlayingNow(nextSong, queue));
         }
     };
 };
 
 class BottomBar extends Component<Props> {
     render() {
-        const playingNow = this.props.playingNow || null;
-        const url =
-            (playingNow &&
-                playingNow.StreamFile &&
-                playingNow.StreamFile.url) ||
-            null;
+        const song = this.props.playingNow.song || null;
+        const url = (song && song.StreamFile && song.StreamFile.url) || null;
         const source = url ? <source src={url} type="audio/mp3" /> : null;
 
         return (
@@ -59,9 +49,7 @@ class BottomBar extends Component<Props> {
                     controls="controls"
                     autoPlay
                     onEnded={() => {
-                        if (this.props.playNextSong) {
-                            this.props.playNextSong();
-                        }
+                        this.props.playNextSong();
                     }}
                 >
                     {source}

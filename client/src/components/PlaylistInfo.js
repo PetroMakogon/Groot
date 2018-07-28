@@ -1,14 +1,16 @@
 // @flow
 import React, { Component } from "react";
 import type { Playlist } from "../models/Playlist";
-import { store } from "../store";
-import { changeCurrentPlaylist } from "../actions/changeCurrentPlaylist";
 import { changePlayingNow } from "../actions/changePlayingNow";
+import { connect } from "react-redux";
+import type { RootState } from "../reducers/root";
 
 type Props = {
     className?: string,
     style?: Object,
     playlist: Playlist
+} & {
+    playThisList: () => void
 };
 
 const styles = {
@@ -21,16 +23,22 @@ const styles = {
     }
 };
 
+const mapStateToProps = (state: RootState) => {
+    return {};
+};
+
+const mapDispatchToProps = (dispatch: *, props: Props) => {
+    return {
+        playThisList: () => {
+            const queue = props.playlist.Songs || [];
+            const song = queue[0] || null;
+            if (!song) return;
+            dispatch(changePlayingNow(song, queue));
+        }
+    };
+};
+
 class PlaylistInfo extends Component<Props> {
-    playThisList() {
-        const songs = this.props.playlist.Songs || [];
-        const song = songs[0] || null;
-        if (!song) return;
-
-        store.dispatch(changeCurrentPlaylist(this.props.playlist));
-        store.dispatch(changePlayingNow(song));
-    }
-
     render() {
         const songs = this.props.playlist.Songs || [];
 
@@ -54,7 +62,7 @@ class PlaylistInfo extends Component<Props> {
                         </p>
                         <button
                             className="btn btn-primary btn-lg rounded-0 w-100"
-                            onClick={() => this.playThisList()}
+                            onClick={() => this.props.playThisList()}
                         >
                             Play
                         </button>
@@ -69,4 +77,7 @@ class PlaylistInfo extends Component<Props> {
     }
 }
 
-export default PlaylistInfo;
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(PlaylistInfo);

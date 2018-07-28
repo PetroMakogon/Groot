@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import AllSongs from "./MainArea/AllSongs";
 import { Route, Switch, withRouter } from "react-router-dom";
 import AllPlaylists from "./MainArea/AllPlaylists";
+import PlaylistDetail from "./MainArea/PlaylistDetail";
 
 type Props = {
     className?: string,
@@ -23,9 +24,20 @@ class MainArea extends Component<Props> {
                             }}
                         />
                         <Route
-                            path="/playlist"
+                            path="/playlists"
                             render={() => {
                                 return <AllPlaylists className={"row"} />;
+                            }}
+                        />
+                        <Route
+                            path="/playlist/:id"
+                            render={props => {
+                                return (
+                                    <PlaylistDetail
+                                        className={"row"}
+                                        playlistID={props.match.params.id}
+                                    />
+                                );
                             }}
                         />
                     </Switch>

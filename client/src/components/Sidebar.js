@@ -45,7 +45,7 @@ class Sidebar extends Component<Props> {
                         All Songs
                     </NavLink>
                     <NavLink
-                        to="/playlist"
+                        to="/playlists"
                         className="list-group-item list-group-item-action"
                     >
                         Playlist

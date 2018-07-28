@@ -2,47 +2,42 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import type { Song } from "../../models/Song";
-import { loadAllSongsAsync } from "../../actions/loadAllSongs";
 import type { Playlist } from "../../models/Playlist";
 import PlaylistInfo from "../PlaylistInfo";
 import SongList from "../SongList";
 import type { RootState } from "../../reducers/root";
+import { loadPlaylistAsync } from "../../actions/changeDisplayingPlaylist";
 
 type Props = {
     className?: string,
     style?: Object,
-    songs: Array<Song>,
-    loadAllSongsAsync: () => void
+    playlistID: number
+} & {
+    playlist: Playlist,
+    loadPlaylist: () => void
 };
 
 const mapStateToProps = (state: RootState) => {
     return {
-        songs: state.allSongs
+        playlist: state.displayingPlaylist
     };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: *, props: Props) => {
     return {
-        loadAllSongsAsync: () => {
-            dispatch(loadAllSongsAsync());
+        loadPlaylist: () => {
+            const playlistID = props.playlistID;
+            dispatch(loadPlaylistAsync(playlistID));
         }
     };
 };
 
-class AllSongs extends Component<Props> {
-    componentDidMount() {
-        this.props.loadAllSongsAsync();
-    }
-
+class PlaylistDetail extends Component<Props> {
     render() {
-        const songs: Array<Song> = this.props.songs;
+        const playlist: Playlist = this.props.playlist || null;
+        if (!playlist) return null;
 
-        let playlist: Playlist = {
-            ID: "0",
-            Title: "All Songs",
-            Description: "",
-            Songs: songs
-        };
+        const songs: Array<Song> = this.props.playlist.Songs || [];
 
         return (
             <div className={this.props.className} style={this.props.style}>
@@ -56,4 +51,4 @@ class AllSongs extends Component<Props> {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(AllSongs);
+)(PlaylistDetail);

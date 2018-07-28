@@ -2,13 +2,22 @@
 import type { Song } from "../models/Song";
 import { ACTION_CHANGE_PLAYING_NOW } from "../actions/actionTypes";
 
-export type PlayingNowState = Song | null;
+export type PlayingNowState = {
+    song: Song | null,
+    queue: Array<Song>
+};
 
-export function playingNow(state: PlayingNowState = null, action: *) {
+export function playingNow(
+    state: PlayingNowState = { song: null, queue: [] },
+    action: *
+) {
     switch (action.type) {
         case ACTION_CHANGE_PLAYING_NOW:
-            if (action.song) {
-                return action.song;
+            if (action.song && action.queue) {
+                return {
+                    song: action.song,
+                    queue: action.queue
+                };
             }
             return state;
         default:

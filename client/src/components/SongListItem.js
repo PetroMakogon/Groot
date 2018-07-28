@@ -2,20 +2,18 @@
 import React, { Component } from "react";
 import type { Song } from "../models/Song";
 import { connect } from "react-redux";
-import { store } from "../store";
 import { changePlayingNow } from "../actions/changePlayingNow";
+import type { RootState } from "../reducers/root";
 
-type ReduxProps = {
-    isPlayingNow?: boolean
-};
-
-type OwnProps = {
+type Props = {
     className?: string,
     style?: Object,
     song: Song
+} & {
+    isPlayingNow: boolean,
+    playingQueue: Array<Song>,
+    playThisSong: () => void
 };
-
-type Props = ReduxProps & OwnProps;
 
 type State = {
     mouseOver: boolean
@@ -31,10 +29,21 @@ const styles = {
     }
 };
 
-const mapStateToProps = (state, props: OwnProps) => {
+const mapStateToProps = (state: RootState, props: Props) => {
+    const song = state.playingNow.song;
     return {
-        isPlayingNow:
-            state.playingNow !== null && state.playingNow.ID === props.song.ID
+        isPlayingNow: song !== null && song.ID === props.song.ID,
+        playingQueue: state.playingNow.queue
+    };
+};
+
+const mapDispatchToProps = (dispatch: *, props: Props) => {
+    return {
+        playThisSong: () => {
+            const song = props.song;
+            const queue = props.playingQueue;
+            dispatch(changePlayingNow(song, queue));
+        }
     };
 };
 
@@ -59,7 +68,7 @@ class SongListItem extends Component<Props, State> {
     }
 
     onPlayButtonClick() {
-        store.dispatch(changePlayingNow(this.props.song));
+        this.props.playThisSong();
     }
 
     onOptionsButtonClick() {
@@ -150,4 +159,4 @@ class SongListItem extends Component<Props, State> {
     }
 }
 
-export default connect(mapStateToProps)(SongListItem);
+export default connect(mapStateToProps, mapDispatchToProps)(SongListItem);
