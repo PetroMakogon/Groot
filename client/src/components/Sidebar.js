@@ -50,6 +50,12 @@ class Sidebar extends Component<Props> {
                     >
                         Playlist
                     </NavLink>
+                    <NavLink
+                        to="/login"
+                        className="list-group-item list-group-item-action"
+                    >
+                        Log In
+                    </NavLink>
                     <a
                         className="btn list-group-item list-group-item-action"
                         href="/admin"

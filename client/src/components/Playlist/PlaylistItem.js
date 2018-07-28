@@ -35,9 +35,9 @@ class PlaylistItem extends Component<Props> {
                 >
                     <div className="card-img-top">
                         <div className="d-flex justify-content-center align-items-center m-auto bg-dark text-light w-100">
-                            <h1>
+                            <h3 className="p-3">
                                 <i className="fas fa-music" />
-                            </h1>
+                            </h3>
                         </div>
                     </div>
                     <div className="card-body">

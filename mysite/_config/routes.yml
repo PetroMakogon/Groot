@@ -6,4 +6,4 @@ After:
 ---
 SilverStripe\Control\Director:
   rules:
-    'main/': Controller\MainPageController
+    'main': Controller\MainPageController

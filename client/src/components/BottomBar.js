@@ -40,17 +40,19 @@ class BottomBar extends Component<Props> {
 
         return (
             <div className={this.props.className} style={this.props.style}>
-                {/*{https://github.com/facebook/react/issues/9447}*/}
                 <audio
-                    key={url}
+                    key={
+                        url /*{https://github.com/facebook/react/issues/9447}*/
+                    }
                     className="w-100 h-100"
                     controls="controls"
                     autoPlay
                     onEnded={() => {
-                        this.props.playNextSong(
-                            this.props.playingNow.song,
-                            this.props.playingNow.queue
-                        );
+                        const song = this.props.playingNow.song;
+                        const queue = this.props.playingNow.queue || [];
+                        if (song) {
+                            this.props.playNextSong(song, queue);
+                        }
                     }}
                 >
                     {source}
