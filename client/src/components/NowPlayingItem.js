@@ -28,7 +28,7 @@ const styles = {
 
 const mapStateToProps = state => {
     return {
-        song: state.playingNow
+        song: state.playingNow.song
     };
 };
 

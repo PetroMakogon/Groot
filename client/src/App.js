@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import Sidebar from "./components/Sidebar";
 import MainArea from "./components/MainArea";
 import BottomBar from "./components/BottomBar";
+import Spinner from "./components/Loading/Spinner";
 
 const styles = {
     mainContainer: {
@@ -18,9 +19,7 @@ const styles = {
     }
 };
 
-
 class App extends Component<*> {
-
     render() {
         return (
             <div className="container-fluid h-100" style={styles.mainContainer}>
@@ -36,6 +35,8 @@ class App extends Component<*> {
                     className="w-100 bg-light position-absolute"
                     style={styles.bottomBar}
                 />
+
+                <Spinner />
             </div>
         );
     }

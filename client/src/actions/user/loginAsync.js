@@ -13,6 +13,10 @@ export function loginAsync(email: string, password: string) {
         dispatch(startLoading());
         UserService.createToken(email, password)
             .then((user: User) => {
+                if(!user.Token) {
+                    throw "User is not valid";
+                }
+                window.localStorage.user = JSON.stringify(user);
                 dispatch(stopLoading());
                 dispatch(login(user));
             })

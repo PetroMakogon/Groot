@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import AllSongs from "./MainArea/AllSongs";
-import { Redirect, Route, Switch, withRouter } from "react-router-dom";
+import { Route, Switch, withRouter } from "react-router-dom";
 import AllPlaylists from "./MainArea/AllPlaylists";
 import PlaylistDetail from "./MainArea/PlaylistDetail";
 import LoginPage from "./MainArea/LoginPage";
@@ -58,10 +58,6 @@ class MainArea extends Component<Props> {
                     render={props => {
                         return <LoginPage className={"row"} />;
                     }}
-                />
-                <Redirect
-                    from="/"
-                    to={this.props.currentUser ? "/all-songs" : "/login"}
                 />
             </Switch>
         );

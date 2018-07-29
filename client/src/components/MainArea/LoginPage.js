@@ -49,7 +49,7 @@ class LoginPage extends Component<Props, State> {
 
         return (
             <div className={this.props.className} style={this.props.style}>
-                <form className="w-50">
+                <div className="w-50">
                     <div className="form-group w-100">
                         <label className={"w-100"}>
                             Email address
@@ -93,7 +93,7 @@ class LoginPage extends Component<Props, State> {
                     >
                         Submit
                     </button>
-                </form>
+                </div>
             </div>
         );
     }

@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from "react";
 import NowPlayingItem from "./NowPlayingItem";
-import { NavLink } from "react-router-dom";
+import { NavLink, withRouter } from "react-router-dom";
 import type { RootState } from "../reducers/root";
 import { logout } from "../actions/user/logout";
 import type { User } from "../models/User";
@@ -39,6 +39,7 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = (dispatch: *, props: Props) => {
     return {
         logout: () => {
+            window.localStorage.removeItem("user");
             dispatch(logout());
         }
     };
@@ -116,7 +117,9 @@ class Sidebar extends Component<Props> {
     }
 }
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Sidebar);
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(Sidebar)
+);
