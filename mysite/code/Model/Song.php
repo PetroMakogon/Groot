@@ -20,6 +20,7 @@ use SilverStripe\GraphQL\Scaffolding\Scaffolders\SchemaScaffolder;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 
 /**
  * Class Song
@@ -193,8 +194,8 @@ class Song extends DataObject implements ScaffoldingProvider
              */
             public function resolve($object, $args, $context, $info)
             {
-                // TODO: permission check
-                // Permission::check('ADMIN', 'any', $member);
+                $member =  Security::getCurrentUser();
+                Permission::check('ADMIN', 'any', $member);
 
                 $list = Song::get();
 

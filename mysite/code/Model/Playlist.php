@@ -12,6 +12,8 @@ use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 
 /**
  * Class Playlist
@@ -119,6 +121,8 @@ class Playlist extends DataObject implements ScaffoldingProvider
              */
             public function resolve($object, $args, $context, $info)
             {
+                Permission::check('ADMIN', 'any', Security::getCurrentUser());
+
                 $validationResult = new ValidationResult();
 
                 $songID = $args['SongID'] ?? null;
@@ -178,6 +182,8 @@ class Playlist extends DataObject implements ScaffoldingProvider
              */
             public function resolve($object, $args, $context, $info)
             {
+                Permission::check('ADMIN', 'any', Security::getCurrentUser());
+
                 $validationResult = new ValidationResult();
 
                 $songID = $args['SongID'] ?? null;
