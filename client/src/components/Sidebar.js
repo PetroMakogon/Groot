@@ -41,6 +41,7 @@ const mapDispatchToProps = (dispatch: *, props: Props) => {
         logout: () => {
             window.localStorage.removeItem("user");
             dispatch(logout());
+            window.location.href = "/main";
         }
     };
 };
