@@ -8,7 +8,7 @@ export type UserState = {
     user: User | null
 };
 
-export function userState(
+export function user(
     state: UserState = {
         user: StorageService.readUser()
     },

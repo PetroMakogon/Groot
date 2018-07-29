@@ -21,7 +21,7 @@ type State = {
 
 const mapStateToProps = (state: RootState) => {
     return {
-        currentUser: state.userState.user
+        currentUser: state.user.user
     };
 };
 
