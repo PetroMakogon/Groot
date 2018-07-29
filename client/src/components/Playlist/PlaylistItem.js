@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import type { Playlist } from "../../models/Playlist";
 import { Link } from "react-router-dom";
-import { loadPlaylistAsync } from "../../actions/changeDisplayingPlaylist";
+import { loadPlaylistAsync } from "../../actions/Playlist/changeDisplayingPlaylist";
 
 type Props = {
     className?: string,

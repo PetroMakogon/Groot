@@ -1,12 +1,13 @@
 // @flow
 
-import { startLoading } from "../startLoading";
+import { startLoading } from "../HUD/startLoading";
 import { Dispatch } from "redux";
-import { stopLoading } from "../stopLoading";
-import { showError } from "../showError";
+import { stopLoading } from "../HUD/stopLoading";
+import { showError } from "../HUD/showError";
 import { login } from "./login";
 import UserService from "../../services/UserService";
 import type { User } from "../../models/User";
+import StorageService from "../../services/StorageService";
 
 export function loginAsync(email: string, password: string) {
     return (dispatch: Dispatch) => {
@@ -16,7 +17,7 @@ export function loginAsync(email: string, password: string) {
                 if(!user.Token) {
                     throw "User is not valid";
                 }
-                window.localStorage.user = JSON.stringify(user);
+                StorageService.saveUser(user);
                 dispatch(stopLoading());
                 dispatch(login(user));
             })

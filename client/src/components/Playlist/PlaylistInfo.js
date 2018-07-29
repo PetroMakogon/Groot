@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from "react";
 import type { Playlist } from "../../models/Playlist";
-import { changePlayingNow } from "../../actions/changePlayingNow";
+import { changePlayingNow } from "../../actions/Song/changePlayingNow";
 import { connect } from "react-redux";
 import type { RootState } from "../../reducers/root";
 

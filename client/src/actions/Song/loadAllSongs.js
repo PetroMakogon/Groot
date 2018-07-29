@@ -1,16 +1,16 @@
 // @flow
-import { ACTION_LOAD_ALL_SONGS } from "./actionTypes";
+import { ACTION_LOAD_ALL_SONGS } from "../actionTypes";
 import { Dispatch } from "redux";
-import FetchSongService from "../services/FetchSongService";
-import { startLoading } from "./startLoading";
-import { stopLoading } from "./stopLoading";
-import { showError } from "./showError";
-import type { Song } from "../models/Song";
+import SongService from "../../services/SongService";
+import { startLoading } from "../HUD/startLoading";
+import { stopLoading } from "../HUD/stopLoading";
+import { showError } from "../HUD/showError";
+import type { Song } from "../../models/Song";
 
 export function loadAllSongsAsync() {
     return (dispatch: Dispatch) => {
         dispatch(startLoading());
-        FetchSongService.fetchAllSongs()
+        SongService.fetchAllSongs()
             .then(songs => {
                 dispatch(stopLoading());
                 dispatch(loadAllSongs(songs));

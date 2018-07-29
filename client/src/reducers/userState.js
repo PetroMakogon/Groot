@@ -2,7 +2,7 @@
 
 import { ACTION_LOGIN, ACTION_LOGOUT } from "../actions/actionTypes";
 import type { User } from "../models/User";
-import JSONService from "../services/JSONService";
+import StorageService from "../services/StorageService";
 
 export type UserState = {
     user: User | null
@@ -10,7 +10,7 @@ export type UserState = {
 
 export function userState(
     state: UserState = {
-        user: JSONService.parseJSON(window.localStorage.user)
+        user: StorageService.readUser()
     },
     action: *
 ): UserState {

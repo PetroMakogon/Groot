@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import type { Song } from "../../models/Song";
 import { connect } from "react-redux";
-import { changePlayingNow } from "../../actions/changePlayingNow";
+import { changePlayingNow } from "../../actions/Song/changePlayingNow";
 import type { RootState } from "../../reducers/root";
 
 type Props = {

@@ -1,4 +1,4 @@
-import { ACTION_LOADING_START } from "./actionTypes";
+import { ACTION_LOADING_START } from "../actionTypes";
 
 export function startLoading() {
     return {

@@ -1,4 +1,4 @@
-import { ACTION_LOADING_STOP } from "./actionTypes";
+import { ACTION_LOADING_STOP } from "../actionTypes";
 
 export function stopLoading() {
     return {

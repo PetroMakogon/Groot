@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import type { Song } from "../models/Song";
-import { loadAllSongsAsync } from "../actions/loadAllSongs";
+import { loadAllSongsAsync } from "../actions/Song/loadAllSongs";
 import type { Playlist } from "../models/Playlist";
 import PlaylistInfo from "../components/Playlist/PlaylistInfo";
 import SongList from "../components/Song/SongList";

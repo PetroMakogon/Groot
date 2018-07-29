@@ -3,9 +3,10 @@ import React, { Component } from "react";
 import NowPlayingItem from "../Song/NowPlayingItem";
 import { NavLink, withRouter } from "react-router-dom";
 import type { RootState } from "../../reducers/root";
-import { logout } from "../../actions/user/logout";
+import { logout } from "../../actions/User/logout";
 import type { User } from "../../models/User";
 import { connect } from "react-redux";
+import StorageService from "../../services/StorageService";
 
 type Props = {
     className?: string,
@@ -39,7 +40,7 @@ const mapStateToProps = (state: RootState) => {
 const mapDispatchToProps = (dispatch: *, props: Props) => {
     return {
         logout: () => {
-            window.localStorage.removeItem("user");
+            StorageService.removeUser();
             dispatch(logout());
             window.location.href = "/main";
         }

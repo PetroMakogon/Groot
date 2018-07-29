@@ -6,7 +6,7 @@ import type { Playlist } from "../models/Playlist";
 import PlaylistInfo from "../components/Playlist/PlaylistInfo";
 import SongList from "../components/Song/SongList";
 import type { RootState } from "../reducers/root";
-import { loadPlaylistAsync } from "../actions/changeDisplayingPlaylist";
+import { loadPlaylistAsync } from "../actions/Playlist/changeDisplayingPlaylist";
 
 type Props = {
     className?: string,

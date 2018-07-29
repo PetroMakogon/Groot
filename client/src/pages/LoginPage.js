@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import type { RootState } from "../reducers/root";
-import { loginAsync } from "../actions/user/loginAsync";
+import { loginAsync } from "../actions/User/loginAsync";
 import type { User } from "../models/User";
 import { Redirect } from "react-router-dom";
 
