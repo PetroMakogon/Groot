@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from "react";
 import SongListItem from "./SongListItem";
-import type { Song } from "../models/Song";
+import type { Song } from "../../models/Song";
 
 type Props = {
     className?: string,

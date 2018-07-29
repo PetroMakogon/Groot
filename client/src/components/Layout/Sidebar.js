@@ -1,10 +1,10 @@
 // @flow
 import React, { Component } from "react";
-import NowPlayingItem from "./NowPlayingItem";
+import NowPlayingItem from "../Song/NowPlayingItem";
 import { NavLink, withRouter } from "react-router-dom";
-import type { RootState } from "../reducers/root";
-import { logout } from "../actions/user/logout";
-import type { User } from "../models/User";
+import type { RootState } from "../../reducers/root";
+import { logout } from "../../actions/user/logout";
+import type { User } from "../../models/User";
 import { connect } from "react-redux";
 
 type Props = {
@@ -50,6 +50,7 @@ class Sidebar extends Component<Props> {
     render() {
         let navigation = null;
         if (this.props.currentUser) {
+            // noinspection HtmlUnknownTarget
             navigation = (
                 <div className="list-group list-group-flush">
                     <NavLink

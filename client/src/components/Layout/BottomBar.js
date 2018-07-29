@@ -1,10 +1,10 @@
 // @flow
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { changePlayingNow } from "../actions/changePlayingNow";
-import type { RootState } from "../reducers/root";
-import type { PlayingNowState } from "../reducers/playingNow";
-import type { Song } from "../models/Song";
+import { changePlayingNow } from "../../actions/changePlayingNow";
+import type { RootState } from "../../reducers/root";
+import type { PlayingNowState } from "../../reducers/playingNow";
+import type { Song } from "../../models/Song";
 
 type Props = {
     className?: string,

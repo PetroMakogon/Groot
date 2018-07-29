@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from "react";
-import type { Song } from "../models/Song";
+import type { Song } from "../../models/Song";
 import { connect } from "react-redux";
 
 type Props = {

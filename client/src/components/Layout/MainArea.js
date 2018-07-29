@@ -1,13 +1,13 @@
 // @flow
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import AllSongs from "./MainArea/AllSongs";
+import AllSongs from "../../pages/SongListPage";
 import { Redirect, Route, Switch, withRouter } from "react-router-dom";
-import AllPlaylists from "./MainArea/AllPlaylists";
-import PlaylistDetail from "./MainArea/PlaylistDetail";
-import LoginPage from "./MainArea/LoginPage";
-import type { RootState } from "../reducers/root";
-import type { User } from "../models/User";
+import AllPlaylists from "../../pages/PlaylistPage";
+import PlaylistDetail from "../../pages/PlaylistDetailPage";
+import LoginPage from "../../pages/LoginPage";
+import type { RootState } from "../../reducers/root";
+import type { User } from "../../models/User";
 
 type Props = {
     className?: string,

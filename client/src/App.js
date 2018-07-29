@@ -1,8 +1,8 @@
 // @flow
 import React, { Component } from "react";
-import Sidebar from "./components/Sidebar";
-import MainArea from "./components/MainArea";
-import BottomBar from "./components/BottomBar";
+import Sidebar from "./components/Layout/Sidebar";
+import MainArea from "./components/Layout/MainArea";
+import BottomBar from "./components/Layout/BottomBar";
 import Spinner from "./components/Loading/Spinner";
 
 const styles = {

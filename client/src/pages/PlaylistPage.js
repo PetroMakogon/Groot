@@ -1,10 +1,10 @@
 // @flow
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import type { Playlist } from "../../models/Playlist";
-import PlaylistItem from "../Playlist/PlaylistItem";
-import { loadAllPlaylistsAsync } from "../../actions/loadAllPlaylists";
-import type { RootState } from "../../reducers/root";
+import type { Playlist } from "../models/Playlist";
+import PlaylistItem from "../components/Playlist/PlaylistItem";
+import { loadAllPlaylistsAsync } from "../actions/loadAllPlaylists";
+import type { RootState } from "../reducers/root";
 
 type Props = {
     className?: string,
@@ -27,7 +27,7 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-class AllPlaylist extends Component<Props> {
+class PlaylistPage extends Component<Props> {
     componentDidMount() {
         this.props.loadAllPlaylists();
     }
@@ -48,4 +48,4 @@ class AllPlaylist extends Component<Props> {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(AllPlaylist);
+)(PlaylistPage);
