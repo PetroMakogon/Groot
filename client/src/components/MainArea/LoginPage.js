@@ -2,11 +2,15 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import type { RootState } from "../../reducers/root";
+import { loginAsync } from "../../actions/user/loginAsync";
+import type { User } from "../../models/User";
+import { Redirect } from "react-router-dom";
 
 type Props = {
     className?: string,
     style?: Object
 } & {
+    currentUser: User | null,
     login: (email: string, password: string) => void
 };
 
@@ -16,13 +20,15 @@ type State = {
 };
 
 const mapStateToProps = (state: RootState) => {
-    return {};
+    return {
+        currentUser: state.userState.user
+    };
 };
 
 const mapDispatchToProps = (dispatch: *, props: Props) => {
     return {
         login: (email: string, password: string) => {
-            console.log(email, password);
+            dispatch(loginAsync(email, password));
         }
     };
 };
@@ -37,6 +43,10 @@ class LoginPage extends Component<Props, State> {
     }
 
     render() {
+        if (this.props.currentUser) {
+            return <Redirect to="/all-songs" />;
+        }
+
         return (
             <div className={this.props.className} style={this.props.style}>
                 <form className="w-50">

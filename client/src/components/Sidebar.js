@@ -2,10 +2,17 @@
 import React, { Component } from "react";
 import NowPlayingItem from "./NowPlayingItem";
 import { NavLink } from "react-router-dom";
+import type { RootState } from "../reducers/root";
+import { logout } from "../actions/user/logout";
+import type { User } from "../models/User";
+import { connect } from "react-redux";
 
 type Props = {
     className?: string,
     style?: Object
+} & {
+    currentUser: User | null,
+    logout: () => void
 };
 
 const styles = {
@@ -23,20 +30,25 @@ const styles = {
     }
 };
 
+const mapStateToProps = (state: RootState) => {
+    return {
+        currentUser: state.userState.user
+    };
+};
+
+const mapDispatchToProps = (dispatch: *, props: Props) => {
+    return {
+        logout: () => {
+            dispatch(logout());
+        }
+    };
+};
+
 class Sidebar extends Component<Props> {
     render() {
-        // noinspection HtmlUnknownTarget
-        return (
-            <div
-                className={
-                    `p-0 ` +
-                    `${this.props.className ? this.props.className : ""}`
-                }
-                style={Object.assign(styles.wrap, this.props.style)}
-            >
-                <div className="container mb-2 mt-3">
-                    <h3>Groot</h3>
-                </div>
+        let navigation = null;
+        if (this.props.currentUser) {
+            navigation = (
                 <div className="list-group list-group-flush">
                     <NavLink
                         to="/all-songs"
@@ -50,12 +62,6 @@ class Sidebar extends Component<Props> {
                     >
                         Playlist
                     </NavLink>
-                    <NavLink
-                        to="/login"
-                        className="list-group-item list-group-item-action"
-                    >
-                        Log In
-                    </NavLink>
                     <a
                         className="btn list-group-item list-group-item-action"
                         href="/admin"
@@ -63,13 +69,46 @@ class Sidebar extends Component<Props> {
                     >
                         Admin
                     </a>
-                    <a
+                    <button
                         className="btn list-group-item list-group-item-action"
-                        href="/Security/Logout"
+                        onClick={() => {
+                            this.props.logout();
+                        }}
                     >
                         Log Out
-                    </a>
+                    </button>
                 </div>
+            );
+        } else {
+            navigation = (
+                <div className="list-group list-group-flush">
+                    <NavLink
+                        to="/login"
+                        className="list-group-item list-group-item-action"
+                    >
+                        Log In
+                    </NavLink>
+                </div>
+            );
+        }
+
+        return (
+            <div
+                className={
+                    `p-0 ` +
+                    `${this.props.className ? this.props.className : ""}`
+                }
+                style={Object.assign(styles.wrap, this.props.style)}
+            >
+                <div className="container mb-2 mt-3">
+                    <h3>Groot</h3>
+                    <p>
+                        {this.props.currentUser
+                            ? "Welcome, " + this.props.currentUser.Email
+                            : null}
+                    </p>
+                </div>
+                {navigation}
 
                 <NowPlayingItem style={styles.nowPlayingItem} />
             </div>
@@ -77,4 +116,7 @@ class Sidebar extends Component<Props> {
     }
 }
 
-export default Sidebar;
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Sidebar);
