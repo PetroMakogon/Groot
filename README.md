@@ -1,4 +1,4 @@
-# ReadMe
+# Readme
 
 `Groot` is a software that hosts and serves your music files on the cloud just like other online music services, but allow you to build a self-hosted platform.
 
@@ -46,10 +46,10 @@ After a batch upload job is created, the program will start to extract informati
 ### Tech stack
 
 - Backend: Silverstripe 4
-- API: GraphQL + Apollo
+- API: GraphQL
 - Web: React + Redux + Bootstrap 4
 
-### Deploy on AWS EC2
+### Deploy with Docker
 
 1. Install Docker: https://docs.docker.com/install/linux/docker-ce/ubuntu/
 2. Clone the repo:
@@ -57,37 +57,49 @@ After a batch upload job is created, the program will start to extract informati
 $ git clone git@github.com:zzdjk6/Groot.git
 $ cd Groot
 ```
-3. Start a container to run in a web server (PHP + Apache included)
+3. Start a container to run in a web server (PHP + Nginx included)
 ```bash
 $ sudo docker run \
---rm \
---name groot-demo \
+-d \
 -p 80:80 \
--v "$PWD":/var/www/html \
--d brettt89/silverstripe-web:7.1-alpine
+-v "$PWD":/var/www/project:delegated \
+--name groot-demo \
+zzdjk6/groot-ubuntu
 
 $ sudo docker exec -it groot-demo /bin/bash
 
-groot-demo: /var/www/html>$ php ./composer.phar install
+groot-demo>$ php ./composer.phar install
 
-groot-demo: /var/www/html>$ exit
+groot-demo>$ exit
 ```
-4. Setup a MySQL database (another Docker container or RDS)
+4. Setup a MySQL database
 5. Create the `.env` file like this:
 ```
-SS_BASE_URL="http://<YOUR DOMAIN OR IP>:80/public" # you need to keep "/public" for now
-SS_DATABASE_CLASS="MySQLPDODatabase"
-SS_DATABASE_SERVER="<DB SERVER>"
-SS_DATABASE_USERNAME="<DB USER NAME>"
-SS_DATABASE_PASSWORD="<DB PASSWORD>"
-SS_DATABASE_NAME="<DB NAME>"
-SS_ENVIRONMENT_TYPE="dev"
-SS_DEFAULT_ADMIN_USERNAME="admin" # your admin username
-SS_DEFAULT_ADMIN_PASSWORD="admin" # your admin password
+# Base URL
+SS_BASE_URL="http://localhost"
 
-# Blow can be ignored for now
-#JWT_PREFIX=<YOUR_PREFIX>
-#JWT_SIGNER_KEY=<YOUR_SIGNER_KEY>
+# DB credentials
+SS_DATABASE_CLASS="MySQLPDODatabase"
+SS_DATABASE_SERVER="docker.for.mac.localhost"
+SS_DATABASE_PASSWORD="root"
+SS_DATABASE_USERNAME="root"
+SS_DATABASE_NAME="Groot"
+
+# ENV
+SS_ENVIRONMENT_TYPE="dev"
+SS_DEFAULT_ADMIN_USERNAME="admin"
+SS_DEFAULT_ADMIN_PASSWORD="admin"
+
+# JWT
+JWT_PREFIX=EmICNLXAtoSi
+JWT_SIGNER_KEY=FWXXhVdNd8s1
+
 ```
-6. Open browser and navigate to `http://<YOUR DOMAIN OR IP>:80/dev/build?flush=1` to init the database tables and cache configs
-7. Navigate to `http://<YOUR DOMAIN OR IP>:80/main` and enjoy!
+6. Open browser and navigate to `http://localhost/dev/build?flush=1` to init the database tables and cache configs
+7. Navigate to `http://localhost/main` and enjoy!
+
+### Deploy manually
+
+1. Check server requirements by visiting `http://localhost/install.php`
+2. A template Nginx config file can be found in `https://docs.silverstripe.org/en/4/getting_started/installation/how_to/configure_nginx/` 
+3. If you want to use Apache, be sure to let it pass `Authorization` correctly. See `https://github.com/Firesphere/silverstripe-graphql-jwt/issues/15`.
