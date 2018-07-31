@@ -153,6 +153,7 @@ class Playlist extends DataObject implements ScaffoldingProvider
                 }
 
                 $playlist->Songs()->add($song->data());
+                $playlist->write();
                 return $playlist;
             }
         });

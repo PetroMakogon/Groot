@@ -4,6 +4,7 @@ import type { Song } from "../../models/Song";
 import { connect } from "react-redux";
 import { changePlayingNow } from "../../actions/Song/changePlayingNow";
 import type { RootState } from "../../reducers/root";
+import { showSongOperationModal } from "../../actions/Modal/showSongOperationModal";
 
 type Props = {
     className?: string,
@@ -12,7 +13,8 @@ type Props = {
     queue: Array<Song>
 } & {
     isPlayingNow: boolean,
-    playThisSong: () => void
+    playThisSong: () => void,
+    openOperationDialog: () => void
 };
 
 type State = {
@@ -41,6 +43,9 @@ const mapDispatchToProps = (dispatch: *, props: Props) => {
     return {
         playThisSong: () => {
             dispatch(changePlayingNow(props.song, props.queue));
+        },
+        openOperationDialog: () => {
+            dispatch(showSongOperationModal(props.song));
         }
     };
 };
@@ -70,7 +75,7 @@ class SongListItem extends Component<Props, State> {
     }
 
     onOptionsButtonClick() {
-        alert(`onOptionsButtonClick: ${this.props.song.Title}`);
+        this.props.openOperationDialog();
     }
 
     static transformLengthInMinute(length: number) {
@@ -157,4 +162,7 @@ class SongListItem extends Component<Props, State> {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SongListItem);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(SongListItem);

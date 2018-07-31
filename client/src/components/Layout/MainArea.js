@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import SongListPage from "../../pages/SongListPage";
+import AllSongsPage from "../../pages/AllSongsPage";
 import { Redirect, Route, Switch, withRouter } from "react-router-dom";
 import PlaylistPage from "../../pages/PlaylistPage";
 import PlaylistDetailPage from "../../pages/PlaylistDetailPage";
@@ -34,7 +34,7 @@ class MainArea extends Component<Props> {
                 <Route
                     path="/all-songs"
                     render={() => {
-                        return <SongListPage className={"row"} />;
+                        return <AllSongsPage className={"row"} />;
                     }}
                 />
                 <Route

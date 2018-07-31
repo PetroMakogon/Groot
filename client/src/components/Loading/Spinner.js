@@ -23,7 +23,10 @@ class Spinner extends Component<Props> {
     render() {
         if (this.props.loading) {
             return (
-                <div className="fixed-top w-100 h-100 d-flex justify-content-center align-items-center">
+                <div
+                    className="fixed-top w-100 h-100 d-flex justify-content-center align-items-center"
+                    style={{ zIndex: 9999 }}
+                >
                     <div
                         className="fixed-top w-100 h-100 bg-light"
                         style={{ opacity: 0.5 }}

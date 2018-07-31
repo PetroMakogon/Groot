@@ -93,4 +93,34 @@ mutation ($input: PlaylistCreateInputType!) {
                 return data.data["createPlaylist"];
             });
     }
+
+    static addSongToPlaylist(
+        songID: number,
+        playlistID: number
+    ): Promise<Playlist> {
+        const query = `
+mutation ($songID: Int, $playlistID: Int) {
+  addSongToPlaylist(SongID: $songID, PlaylistID: $playlistID) {
+    ID
+    ClassName
+    LastEdited
+    Created
+    Title
+    Description
+    NumberOfSongs
+  }
+}
+        `;
+        const variables = {
+            songID: songID,
+            playlistID: playlistID
+        };
+
+        return AxiosService.getAxiosInstance(query, variables)
+            .request()
+            .then(response => response.data)
+            .then(data => {
+                return data.data["addSongToPlaylist"];
+            });
+    }
 }

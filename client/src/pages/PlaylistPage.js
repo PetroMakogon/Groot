@@ -16,7 +16,7 @@ type Props = {
 
 const mapStateToProps = (state: RootState) => {
     return {
-        playlists: state.allPlaylists
+        playlists: state.allPlaylistsPageState.playlists
     };
 };
 
