@@ -1,13 +1,14 @@
 // @flow
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import AllSongs from "../../pages/SongListPage";
+import SongListPage from "../../pages/SongListPage";
 import { Redirect, Route, Switch, withRouter } from "react-router-dom";
-import AllPlaylists from "../../pages/PlaylistPage";
-import PlaylistDetail from "../../pages/PlaylistDetailPage";
+import PlaylistPage from "../../pages/PlaylistPage";
+import PlaylistDetailPage from "../../pages/PlaylistDetailPage";
 import LoginPage from "../../pages/LoginPage";
 import type { RootState } from "../../reducers/root";
 import type { User } from "../../models/User";
+import PlaylistEditPage from "../../pages/PlaylistEditPage";
 
 type Props = {
     className?: string,
@@ -33,20 +34,26 @@ class MainArea extends Component<Props> {
                 <Route
                     path="/all-songs"
                     render={() => {
-                        return <AllSongs className={"row"} />;
+                        return <SongListPage className={"row"} />;
+                    }}
+                />
+                <Route
+                    path="/playlists/new"
+                    render={props => {
+                        return <PlaylistEditPage className={"row"} />;
                     }}
                 />
                 <Route
                     path="/playlists"
                     render={() => {
-                        return <AllPlaylists className={"row"} />;
+                        return <PlaylistPage className={"row"} />;
                     }}
                 />
                 <Route
                     path="/playlist/:id"
                     render={props => {
                         return (
-                            <PlaylistDetail
+                            <PlaylistDetailPage
                                 className={"row"}
                                 playlistID={props.match.params.id}
                             />
@@ -59,7 +66,7 @@ class MainArea extends Component<Props> {
                         return <LoginPage className={"row"} />;
                     }}
                 />
-                <Redirect from="/" to="/login"/>
+                <Redirect from="/" to="/login" />
             </Switch>
         );
 

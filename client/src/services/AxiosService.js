@@ -4,7 +4,7 @@ import axios from "axios";
 import StorageService from "./StorageService";
 
 export default class AxiosService {
-    static getAxiosInstance(query: *) {
+    static getAxiosInstance(query: *, variables: *) {
         let headers = {};
 
         const user = StorageService.readUser();
@@ -17,7 +17,8 @@ export default class AxiosService {
             url: "/graphql",
             method: "post",
             data: {
-                query: query
+                query,
+                variables
             },
             headers: headers
         });

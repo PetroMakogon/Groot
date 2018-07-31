@@ -5,6 +5,7 @@ import type { Playlist } from "../models/Playlist";
 import PlaylistItem from "../components/Playlist/PlaylistItem";
 import { loadAllPlaylistsAsync } from "../actions/Playlist/loadAllPlaylists";
 import type { RootState } from "../reducers/root";
+import PlaylistItemAdd from "../components/Playlist/PlaylistItemAdd";
 
 type Props = {
     className?: string,
@@ -37,8 +38,9 @@ class PlaylistPage extends Component<Props> {
 
         return (
             <div className={this.props.className} style={this.props.style}>
+                <PlaylistItemAdd className="col-4 mb-3" />
                 {playlists.map(playlist => {
-                    return <PlaylistItem key={playlist.ID} playlist={playlist} className="col-4" />;
+                    return <PlaylistItem key={playlist.ID} playlist={playlist} className="col-4 mb-3" />;
                 })}
             </div>
         );

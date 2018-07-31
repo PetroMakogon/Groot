@@ -13,6 +13,7 @@ use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\PermissionFailureException;
 use SilverStripe\Security\Security;
 
 /**
@@ -159,8 +160,8 @@ class Playlist extends DataObject implements ScaffoldingProvider
 
     /**
      * @param SchemaScaffolder $schema
+     * @throws \SilverStripe\Security\PermissionFailureException
      * @throws \Exception
-     * @throws \SilverStripe\ORM\ValidationException
      * @throws \InvalidArgumentException
      */
     private function provideGraphQLScaffoldingRemoveSong(SchemaScaffolder $schema): void
@@ -182,7 +183,9 @@ class Playlist extends DataObject implements ScaffoldingProvider
              */
             public function resolve($object, $args, $context, $info)
             {
-                Permission::check('ADMIN', 'any', Security::getCurrentUser());
+                if (!Permission::check('ADMIN', 'any', Security::getCurrentUser())) {
+                    throw new PermissionFailureException('Permission denied');
+                }
 
                 $validationResult = new ValidationResult();
 
@@ -210,5 +213,10 @@ class Playlist extends DataObject implements ScaffoldingProvider
                 return $playlist;
             }
         });
+    }
+
+    public function canCreate($member = null, $context = array())
+    {
+        return Permission::check('ADMIN', 'any', Security::getCurrentUser());
     }
 }

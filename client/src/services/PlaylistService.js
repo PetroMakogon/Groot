@@ -61,4 +61,36 @@ export default class PlaylistService {
                 return data.data["readOnePlaylist"];
             });
     }
+
+    static createPlaylist(
+        title: string,
+        description: string
+    ): Promise<Playlist> {
+        const query = `
+mutation ($input: PlaylistCreateInputType!) {
+  createPlaylist(Input: $input) {
+    ID
+    ClassName
+    LastEdited
+    Created
+    Title
+    Description
+    NumberOfSongs
+  }
+}
+        `;
+        const variables = {
+            input: {
+                Title: title,
+                Description: description
+            }
+        };
+
+        return AxiosService.getAxiosInstance(query, variables)
+            .request()
+            .then(response => response.data)
+            .then(data => {
+                return data.data["createPlaylist"];
+            });
+    }
 }
