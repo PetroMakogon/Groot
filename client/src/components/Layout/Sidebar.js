@@ -33,7 +33,7 @@ const styles = {
 
 const mapStateToProps = (state: RootState) => {
     return {
-        currentUser: state.user.user
+        currentUser: state.userState.user
     };
 };
 

@@ -2,31 +2,31 @@
 import { combineReducers } from "redux";
 import type { AllSongsPageState } from "./allSongsPageState";
 import { allSongsPageState } from "./allSongsPageState";
-import type { LoadingState } from "./loading";
-import { loading } from "./loading";
-import type { PlayingNowState } from "./playingNow";
-import { playingNow } from "./playingNow";
+import type { LoadingState } from "./loadingState";
+import { loadingState } from "./loadingState";
+import type { PlayingNowState } from "./playingNowState";
+import { playingNowState } from "./playingNowState";
 import type { PlaylistDetailPageState } from "./playlistDetailPageState";
 import { playlistDetailPageState } from "./playlistDetailPageState";
 import type { AllPlaylistsPageState } from "./allPlaylistsPageState";
 import { allPlaylistsPageState } from "./allPlaylistsPageState";
-import type { UserState } from "./user";
-import { user } from "./user";
+import type { UserState } from "./userState";
+import { userState } from "./userState";
 
 export type RootState = {
     allSongsPageState: AllSongsPageState,
-    loading: LoadingState,
-    playingNow: PlayingNowState,
+    loadingState: LoadingState,
+    playingNowState: PlayingNowState,
     playlistDetailPageState: PlaylistDetailPageState,
     allPlaylistsPageState: AllPlaylistsPageState,
-    user: UserState
+    userState: UserState
 };
 
 export const root = combineReducers({
     allSongsPageState,
-    loading,
-    playingNow,
     playlistDetailPageState,
     allPlaylistsPageState,
-    user
+    loadingState,
+    playingNowState,
+    userState
 });

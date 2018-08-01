@@ -7,7 +7,7 @@ import "./Spinner.css";
 
 const mapStateToProps = (state: RootState) => {
     return {
-        loading: state.loading > 0
+        loading: state.loadingState.loadingCount > 0
     };
 };
 

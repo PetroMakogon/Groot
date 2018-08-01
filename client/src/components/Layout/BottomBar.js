@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { changePlayingNow } from "../../actions/Song/changePlayingNow";
 import type { RootState } from "../../reducers/root";
-import type { PlayingNowState } from "../../reducers/playingNow";
+import type { PlayingNowState } from "../../reducers/playingNowState";
 import type { Song } from "../../models/Song";
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
 
 const mapStateToProps = (state: RootState) => {
     return {
-        playingNow: state.playingNow
+        playingNow: state.playingNowState
     };
 };
 

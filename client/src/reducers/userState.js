@@ -8,7 +8,7 @@ export type UserState = {
     user: User | null
 };
 
-export function user(
+export function userState(
     state: UserState = {
         user: StorageService.readUser()
     },
@@ -17,7 +17,7 @@ export function user(
     switch (action.type) {
         case ACTION_LOGIN:
             return {
-                user: action.user
+                user: action.userState
             };
         case ACTION_LOGOUT:
             return {

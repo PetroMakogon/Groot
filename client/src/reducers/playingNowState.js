@@ -7,7 +7,7 @@ export type PlayingNowState = {
     queue: Array<Song>
 };
 
-export function playingNow(
+export function playingNowState(
     state: PlayingNowState = { song: null, queue: [] },
     action: *
 ) {

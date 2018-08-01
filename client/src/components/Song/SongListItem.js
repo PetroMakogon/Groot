@@ -32,10 +32,10 @@ const styles = {
 };
 
 const mapStateToProps = (state: RootState, props: Props) => {
-    const song = state.playingNow.song;
+    const song = state.playingNowState.song;
     return {
         isPlayingNow: song !== null && song.ID === props.song.ID,
-        playingQueue: state.playingNow.queue
+        playingQueue: state.playingNowState.queue
     };
 };
 
