@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import type { Playlist } from "../../models/Playlist";
 import { Link } from "react-router-dom";
-import { loadPlaylistAsync } from "../../actions/Playlist/changeDisplayingPlaylist";
+import { loadPlaylistDetailAsync } from "../../actions/Playlist/loadPlaylistDetail";
 
 type Props = {
     className?: string,
@@ -21,7 +21,7 @@ const mapDispatchToProps = (dispatch: *, props: Props) => {
     return {
         loadPlaylist: () => {
             const playlistID = props.playlist.ID;
-            dispatch(loadPlaylistAsync(playlistID));
+            dispatch(loadPlaylistDetailAsync(playlistID));
         }
     };
 };

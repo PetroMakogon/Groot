@@ -211,6 +211,7 @@ class Playlist extends DataObject implements ScaffoldingProvider
                 }
 
                 $playlist->Songs()->removeByID($songID);
+                $playlist->write();
                 return $playlist;
             }
         });

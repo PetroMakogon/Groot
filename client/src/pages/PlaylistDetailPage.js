@@ -6,7 +6,7 @@ import type { Playlist } from "../models/Playlist";
 import PlaylistInfo from "../components/Playlist/PlaylistInfo";
 import SongList from "../components/Song/SongList";
 import type { RootState } from "../reducers/root";
-import { loadPlaylistAsync } from "../actions/Playlist/changeDisplayingPlaylist";
+import { loadPlaylistDetailAsync } from "../actions/Playlist/loadPlaylistDetail";
 import { addSongToPlaylistAsync } from "../actions/Playlist/addSongToPlaylistAsync";
 import type { AllPlaylistsPageState } from "../reducers/allPlaylistsPageState";
 import { showAddToPlaylistModal } from "../actions/Modal/showAddToPlaylistModal";
@@ -15,6 +15,7 @@ import { hideAddToPlaylistModal } from "../actions/Modal/hideAddToPlaylistModal"
 import { loadAllPlaylistsAsync } from "../actions/Playlist/loadAllPlaylists";
 import type { PlaylistDetailPageState } from "../reducers/playlistDetailPageState";
 import ListModal from "../components/Layout/ListModal";
+import { removeSongFromPlaylistAsync } from "../actions/Playlist/removeSongFromPlaylistAsync";
 
 type Props = {
     className?: string,
@@ -26,6 +27,7 @@ type Props = {
 } & {
     loadPlaylistAsync: () => void,
     addSongToPlaylist: (song: Song, playlist: Playlist) => void,
+    removeSongFromPlaylistAsync: (song: Song, playlist: Playlist) => void,
     hideSongOperationModal: () => void,
     showAddToPlaylistModal: (song: Song) => void,
     hideAddToPlaylistModal: () => void
@@ -43,10 +45,13 @@ const mapDispatchToProps = (dispatch: *, props: Props) => {
         loadPlaylistAsync: () => {
             const playlistID = props.playlistID;
             if (playlistID === 0) return;
-            dispatch(loadPlaylistAsync(playlistID));
+            dispatch(loadPlaylistDetailAsync(playlistID));
         },
         addSongToPlaylist: (song: Song, playlist: Playlist) => {
             dispatch(addSongToPlaylistAsync(song, playlist));
+        },
+        removeSongFromPlaylistAsync: (song: Song, playlist: Playlist) => {
+            dispatch(removeSongFromPlaylistAsync(song, playlist));
         },
         hideSongOperationModal: () => {
             dispatch(hideSongOperationModal());
@@ -89,6 +94,30 @@ class PlaylistDetailPage extends Component<Props> {
             return null;
 
         const song = this.props.playlistDetailPageState.operatingSong;
+        const playlist = this.props.playlistDetailPageState.playlist;
+
+        let items = [];
+        items.push({
+            title: "Add to playlist",
+            onClick: () => {
+                if (!song) return;
+                this.props.showAddToPlaylistModal(song);
+            }
+        });
+
+        if (this.props.playlistID !== 0) {
+            items.push({
+                title: "Remove from playlist",
+                onClick: () => {
+                    if (!song) return;
+                    if (confirm("Are you sure?") && playlist) {
+                        this.props.removeSongFromPlaylistAsync(song, playlist);
+                        this.props.hideSongOperationModal();
+                        this.props.hideAddToPlaylistModal();
+                    }
+                }
+            });
+        }
 
         return (
             <ListModal
@@ -97,15 +126,7 @@ class PlaylistDetailPage extends Component<Props> {
                 onCloseButtonClick={() => {
                     this.props.hideSongOperationModal();
                 }}
-                items={[
-                    {
-                        title: "Add to playlist",
-                        onClick: () => {
-                            if (!song) return;
-                            this.props.showAddToPlaylistModal(song);
-                        }
-                    }
-                ]}
+                items={items}
             />
         );
     }

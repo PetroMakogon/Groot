@@ -126,4 +126,34 @@ mutation ($songID: Int, $playlistID: Int) {
                 return data.data["addSongToPlaylist"];
             });
     }
+
+    static removeSongFromPlaylist(
+        songID: number,
+        playlistID: number
+    ): Promise<Playlist> {
+        const query = `
+mutation ($songID: Int, $playlistID: Int) {
+  removeSongFromPlaylist(SongID: $songID, PlaylistID: $playlistID) {
+    ID
+    ClassName
+    LastEdited
+    Created
+    Title
+    Description
+    NumberOfSongs
+  }
+}
+        `;
+        const variables = {
+            songID: songID,
+            playlistID: playlistID
+        };
+
+        return AxiosService.getAxiosInstance(query, variables)
+            .request()
+            .then(response => response.data)
+            .then(data => {
+                return data.data["removeSongFromPlaylist"];
+            });
+    }
 }

@@ -5,21 +5,21 @@ import { startLoading } from "../HUD/startLoading";
 import PlaylistService from "../../services/PlaylistService";
 import { showError } from "../HUD/showError";
 
-export function changeDisplayingPlaylist(playlist: Playlist) {
+export function loadPlaylistDetail(playlist: Playlist) {
     return {
         type: ACTION_CHANGE_DISPLAYING_PLAYLIST,
         playlist
     };
 }
 
-export function loadPlaylistAsync(playlistID: number) {
+export function loadPlaylistDetailAsync(playlistID: number) {
     return (dispatch: *) => {
-        dispatch(changeDisplayingPlaylist(null));
+        dispatch(loadPlaylistDetail(null));
         dispatch(startLoading());
         PlaylistService.fetchOnePlaylist(playlistID)
             .then(playlist => {
                 dispatch(stopLoading());
-                dispatch(changeDisplayingPlaylist(playlist));
+                dispatch(loadPlaylistDetail(playlist));
             })
             .catch(error => {
                 dispatch(stopLoading());
