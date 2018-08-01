@@ -4,13 +4,15 @@ import type { Playlist } from "../../models/Playlist";
 import { changePlayingNow } from "../../actions/Song/changePlayingNow";
 import { connect } from "react-redux";
 import type { RootState } from "../../reducers/root";
+import { removePlaylistAsync } from "../../actions/Playlist/removePlaylistAsync";
 
 type Props = {
     className?: string,
     style?: Object,
     playlist: Playlist
 } & {
-    playThisList: () => void
+    playThisList: () => void,
+    removePlaylist: (playlist: Playlist) => void
 };
 
 const styles = {
@@ -34,6 +36,11 @@ const mapDispatchToProps = (dispatch: *, props: Props) => {
             const song = queue[0] || null;
             if (!song) return;
             dispatch(changePlayingNow(song, queue));
+        },
+        removePlaylist: (playlist: Playlist) => {
+            if (confirm("Are you sure?")) {
+                dispatch(removePlaylistAsync(playlist));
+            }
         }
     };
 };
@@ -80,8 +87,13 @@ class PlaylistInfo extends Component<Props> {
         }
 
         return (
-            <button className="btn bg-transparent rounded-0 mt-3 text-light">
-                <i className="fas fa-ellipsis-h" />
+            <button
+                className="btn bg-transparent rounded-0 mt-3 text-light"
+                onClick={() => {
+                    this.props.removePlaylist(this.props.playlist);
+                }}
+            >
+                <i className="fas fa-trash text-danger" />
             </button>
         );
     }

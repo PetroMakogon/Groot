@@ -97,6 +97,24 @@ mutation ($input: PlaylistCreateInputType!) {
             });
     }
 
+    static removePlaylist(playlistID: number): Promise<void> {
+        const query = `
+mutation ($playlistIDs: [ID]!) {
+  deletePlaylist(IDs: $playlistIDs) {
+    ID
+  }
+}
+        `;
+        const variables = {
+            playlistIDs: [playlistID]
+        };
+
+        return AxiosService.getAxiosInstance(query, variables)
+            .request()
+            .then(response => response.data)
+            .then(data => {});
+    }
+
     static addSongToPlaylist(
         songID: number,
         playlistID: number
