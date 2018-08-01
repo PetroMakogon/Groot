@@ -10,7 +10,7 @@ export default class StorageService {
     }
 
     static removeUser() {
-        window.localStorage.removeItem("userState");
+        window.localStorage.removeItem("user");
     }
 
     static parseJSON(text: string) {

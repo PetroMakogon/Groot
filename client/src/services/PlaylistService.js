@@ -27,8 +27,8 @@ export default class PlaylistService {
 
     static fetchOnePlaylist(playlistID: number): Promise<Playlist> {
         const query = `
-{
-  readOnePlaylist(ID: ${playlistID}) {
+query ($playlistID: ID!){
+  readOnePlaylist(ID: $playlistID) {
     ID
     ClassName
     LastEdited
@@ -54,7 +54,10 @@ export default class PlaylistService {
   }
 }
         `;
-        return AxiosService.getAxiosInstance(query)
+        const variables = {
+            playlistID: playlistID
+        };
+        return AxiosService.getAxiosInstance(query, variables)
             .request()
             .then(response => response.data)
             .then(data => {

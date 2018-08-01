@@ -17,7 +17,7 @@ export function userState(
     switch (action.type) {
         case ACTION_LOGIN:
             return {
-                user: action.userState
+                user: action.user
             };
         case ACTION_LOGOUT:
             return {
