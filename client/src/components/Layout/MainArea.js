@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import AllSongsPage from "../../pages/AllSongsPage";
 import { Redirect, Route, Switch, withRouter } from "react-router-dom";
-import PlaylistPage from "../../pages/PlaylistPage";
+import AllPlaylistsPage from "../../pages/AllPlaylistsPage";
 import PlaylistDetailPage from "../../pages/PlaylistDetailPage";
 import LoginPage from "../../pages/LoginPage";
 import type { RootState } from "../../reducers/root";
@@ -46,7 +46,7 @@ class MainArea extends Component<Props> {
                 <Route
                     path="/playlists"
                     render={() => {
-                        return <PlaylistPage className={"row"} />;
+                        return <AllPlaylistsPage className={"row"} />;
                     }}
                 />
                 <Route

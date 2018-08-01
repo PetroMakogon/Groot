@@ -216,4 +216,24 @@ class Song extends DataObject implements ScaffoldingProvider
 
         return $schema;
     }
+
+    public function canCreate($member = null, $context = array())
+    {
+        return Permission::check('ADMIN', 'any', Security::getCurrentUser());
+    }
+
+    public function canView($member = null)
+    {
+        return Permission::check('ADMIN', 'any', Security::getCurrentUser());
+    }
+
+    public function canDelete($member = null)
+    {
+        return Permission::check('ADMIN', 'any', Security::getCurrentUser());
+    }
+
+    public function canEdit($member = null)
+    {
+        return Permission::check('ADMIN', 'any', Security::getCurrentUser());
+    }
 }

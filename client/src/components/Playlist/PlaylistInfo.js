@@ -67,12 +67,22 @@ class PlaylistInfo extends Component<Props> {
                             Play
                         </button>
                         <br />
-                        <button className="btn bg-transparent rounded-0 mt-3 text-light">
-                            <i className="fas fa-ellipsis-h" />
-                        </button>
+                        {this.renderOptionsButton()}
                     </div>
                 </div>
             </div>
+        );
+    }
+
+    renderOptionsButton() {
+        if (parseInt(this.props.playlist.ID) === 0) {
+            return null;
+        }
+
+        return (
+            <button className="btn bg-transparent rounded-0 mt-3 text-light">
+                <i className="fas fa-ellipsis-h" />
+            </button>
         );
     }
 }

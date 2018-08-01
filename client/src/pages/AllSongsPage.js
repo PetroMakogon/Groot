@@ -60,6 +60,8 @@ const mapDispatchToProps = dispatch => {
 
 class AllSongsPage extends Component<Props> {
     componentDidMount() {
+        this.props.hideSongOperationModal();
+        this.props.hideAddToPlaylistModal();
         this.props.loadAllSongsAsync();
     }
 

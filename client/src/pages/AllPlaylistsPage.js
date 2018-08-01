@@ -28,7 +28,7 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-class PlaylistPage extends Component<Props> {
+class AllPlaylistsPage extends Component<Props> {
     componentDidMount() {
         this.props.loadAllPlaylists();
     }
@@ -50,4 +50,4 @@ class PlaylistPage extends Component<Props> {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(PlaylistPage);
+)(AllPlaylistsPage);

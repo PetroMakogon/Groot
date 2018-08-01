@@ -42,10 +42,7 @@ class PlaylistItem extends Component<Props> {
                     </div>
                     <div className="card-body">
                         <h5 className="card-title">
-                            <Link
-                                to={`/playlist/${this.props.playlist.ID}`}
-                                onClick={() => this.props.loadPlaylist()}
-                            >
+                            <Link to={`/playlist/${this.props.playlist.ID}`}>
                                 {this.props.playlist.Title}
                             </Link>
                         </h5>
