@@ -122,7 +122,9 @@ class Playlist extends DataObject implements ScaffoldingProvider
              */
             public function resolve($object, $args, $context, $info)
             {
-                Permission::check('ADMIN', 'any', Security::getCurrentUser());
+                if (!Permission::check('ADMIN', 'any', Security::getCurrentUser())) {
+                    throw new PermissionFailureException('Permission denied');
+                }
 
                 $validationResult = new ValidationResult();
 

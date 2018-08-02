@@ -20,6 +20,7 @@ use SilverStripe\GraphQL\Scaffolding\Scaffolders\SchemaScaffolder;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\PermissionFailureException;
 use SilverStripe\Security\Security;
 
 /**
@@ -111,7 +112,7 @@ class Song extends DataObject implements ScaffoldingProvider
             $this->StreamFile->publishFile();
         }
 
-        $fullPath = BASE_PATH . $this->StreamFile->getSourceURL();
+        $fullPath = PUBLIC_PATH . $this->StreamFile->getSourceURL();
         try {
             $getID3 = new getID3;
             $raw = $getID3->analyze($fullPath);
@@ -194,8 +195,9 @@ class Song extends DataObject implements ScaffoldingProvider
              */
             public function resolve($object, $args, $context, $info)
             {
-                $member =  Security::getCurrentUser();
-                Permission::check('ADMIN', 'any', $member);
+                if (!Permission::check('ADMIN', 'any', Security::getCurrentUser())) {
+                    throw new PermissionFailureException('Permission denied');
+                }
 
                 $list = Song::get();
 
