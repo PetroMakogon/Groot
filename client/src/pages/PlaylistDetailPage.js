@@ -14,7 +14,7 @@ import { hideSongOperationModal } from "../actions/Modal/hideSongOperationModal"
 import { hideAddToPlaylistModal } from "../actions/Modal/hideAddToPlaylistModal";
 import { loadAllPlaylistsAsync } from "../actions/Playlist/loadAllPlaylists";
 import type { PlaylistDetailPageState } from "../reducers/playlistDetailPageState";
-import ListModal from "../components/Layout/ListModal";
+import ListModal from "../components/Modal/ListModal";
 import { removeSongFromPlaylistAsync } from "../actions/Playlist/removeSongFromPlaylistAsync";
 
 type Props = {

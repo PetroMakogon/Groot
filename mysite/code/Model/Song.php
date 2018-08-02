@@ -12,6 +12,7 @@ use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TabSet;
+use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\GraphQL\Scaffolding\Interfaces\ResolverInterface;
 use SilverStripe\GraphQL\Scaffolding\Interfaces\ScaffoldingProvider;
@@ -43,12 +44,14 @@ class Song extends DataObject implements ScaffoldingProvider
     private static $table_name = 'Song';
 
     private static $db = [
-        'Title'  => 'Varchar(255)',
-        'Length' => 'Decimal',
-        'Artist' => 'Varchar(255)',
-        'Album'  => 'Varchar(255)',
-        'Disc'   => 'Int',
-        'Track'  => 'Int'
+        'Title'    => 'Varchar(255)',
+        'Length'   => 'Decimal',
+        'Artist'   => 'Varchar(255)',
+        'Album'    => 'Varchar(255)',
+        'Disc'     => 'Int',
+        'Track'    => 'Int',
+        'TXTLyric' => 'Text',
+        'LRCLyric' => 'Text'
     ];
 
     private static $owns = ['StreamFile'];
@@ -91,7 +94,9 @@ class Song extends DataObject implements ScaffoldingProvider
             TextField::create('Album'),
             NumericField::create('Length')->setScale(2),
             NumericField::create('Disc'),
-            NumericField::create('Track')
+            NumericField::create('Track'),
+            TextareaField::create('TXTLyric'),
+            TextareaField::create('LRCLyric'),
         ]);
 
         return $fields;

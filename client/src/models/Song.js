@@ -11,5 +11,7 @@ export type Song = {
     Album: string,
     Disc: number,
     Track: number,
-    StreamFile?: CMSFile
+    StreamFile?: CMSFile,
+    TXTLyric: string,
+    LRCLyric: string
 };

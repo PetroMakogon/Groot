@@ -7,7 +7,7 @@ import type { Playlist } from "../models/Playlist";
 import PlaylistInfo from "../components/Playlist/PlaylistInfo";
 import SongList from "../components/Song/SongList";
 import type { RootState } from "../reducers/root";
-import ListModal from "../components/Layout/ListModal";
+import ListModal from "../components/Modal/ListModal";
 import type { AllSongsPageState } from "../reducers/allSongsPageState";
 import { hideSongOperationModal } from "../actions/Modal/hideSongOperationModal";
 import { showAddToPlaylistModal } from "../actions/Modal/showAddToPlaylistModal";

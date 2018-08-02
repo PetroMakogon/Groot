@@ -2,11 +2,16 @@
 import React, { Component } from "react";
 import type { Song } from "../../models/Song";
 import { connect } from "react-redux";
+import { showLyricModal } from "../../actions/Modal/showLyricModal";
+import { loadSongLyricAsync } from "../../actions/Song/loadSongLyricAsync";
 
 type Props = {
     className?: string,
-    style?: Object,
-    song?: Song
+    style?: Object
+} & {
+    song?: Song,
+    showLyric: () => void,
+    loadLyric: (songID: number) => void
 };
 
 const styles = {
@@ -32,9 +37,18 @@ const mapStateToProps = state => {
     };
 };
 
-class NowPlayingItem extends Component<Props> {
-    onOptionsButtonClick() {}
+const mapDispatchToProps = (dispatch: *, props: Props) => {
+    return {
+        showLyric: () => {
+            dispatch(showLyricModal());
+        },
+        loadLyric: (songID: number) => {
+            dispatch(loadSongLyricAsync(songID));
+        }
+    };
+};
 
+class NowPlayingItem extends Component<Props> {
     render() {
         const song = this.props.song || null;
 
@@ -53,12 +67,15 @@ class NowPlayingItem extends Component<Props> {
                                 style={styles.imageIcon}
                             />
                         </div>
-                        <div
-                            className="d-flex justify-content-center align-items-center"
-                            onClick={() => this.onOptionsButtonClick()}
+                        <button
+                            className="btn btn-info btn-sm mt-1 border-0 rounded-0 w-100"
+                            onClick={() => {
+                                this.props.loadLyric(parseInt(song.ID));
+                                this.props.showLyric();
+                            }}
                         >
-                            <h5>...</h5>
-                        </div>
+                            lyric
+                        </button>
                     </div>
 
                     <div className="media-body" style={styles.infoBox}>
@@ -72,4 +89,7 @@ class NowPlayingItem extends Component<Props> {
     }
 }
 
-export default connect(mapStateToProps)(NowPlayingItem);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(NowPlayingItem);
