@@ -26,3 +26,7 @@ Firesphere\GraphQLJWT\Authentication\JWTAuthenticator:
   nbf_time: 0
   nbf_expiration: 2592000 # 1 month
   anonymous_allowed: false
+
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Assets\FileNameFilter:
+    class: Helper\FileNameFilter
