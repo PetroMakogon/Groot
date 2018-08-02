@@ -1,0 +1,24 @@
+FROM ubuntu:18.04
+MAINTAINER THOR CHEN "<zzdjk6@gmail.com>"
+
+RUN apt-get update && apt-get install -y \
+    php7.2 \
+    php7.2-fpm \
+    php7.2-mbstring \
+    php7.2-mysql \
+    php7.2-dom \
+    php7.2-gd \
+    php7.2-curl \
+    php7.2-tidy \
+    php7.2-intl \
+    nginx \
+    zip \
+    unzip \
+    nano \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY php-fpm.ini /etc/php/7.2/fpm/php.ini
+COPY nginx-site /etc/nginx/sites-enabled/default
+COPY xdebug.ini /etc/php/7.2/fpm/conf.d/20-xdebug.ini
+
+EXPOSE 80
