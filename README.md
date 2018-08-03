@@ -19,7 +19,7 @@ By the way, this is a side project to practice some new skills that may be requi
 
 ### Web Player
 
-![e3a4002b.png](README.assets/e3a4002b.png)
+![e3a4002b.png](README.assets/e3a4002c.png)
 
 ### Admin
 
@@ -45,61 +45,83 @@ After a batch upload job is created, the program will start to extract informati
 
 ### Tech stack
 
-- Backend: Silverstripe 4
+- Backend: SilverStripe 4
 - API: GraphQL
 - Web: React + Redux + Bootstrap 4
 
 ### Deploy with Docker
 
-1. Install Docker: https://docs.docker.com/install/linux/docker-ce/ubuntu/
-2. Clone the repo:
+#### 1. Install Docker
+
+see: [https://docs.docker.com/install/linux/docker-ce/ubuntu/](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+
+#### 2. Setup a MySQL instance (either set it locally or use AWS RDS or other services)
+
+#### 3. Clone the repo
+
 ```bash
 $ git clone git@github.com:zzdjk6/Groot.git
 $ cd Groot
 ```
-3. Start a container to run in a web server (PHP + Nginx included)
+
+#### 4. Build and run Docker container (Nginx + PHP-FPM 7.2)
+
+> you can choose your port instead of sticking to 80
+
 ```bash
+$ sudo docker build -t groot-build ./dockerfile/ 
+
 $ sudo docker run \
+-it \
+--rm \
 -d \
 -p 80:80 \
 -v "$PWD":/var/www/project:delegated \
---name groot-demo \
-zzdjk6/groot-ubuntu
+--name groot-build  \
+groot-build /bin/bash
 
-$ sudo docker exec -it groot-demo /bin/bash
-
-groot-demo>$ php ./composer.phar install
-
-groot-demo>$ exit
+$ sudo docker exec -it groot-build /bin/bash
 ```
-4. Setup a MySQL database
-5. Create the `.env` file like this:
+#### 5. Setup environment and install dependencies
+
+```bash
+$ cd /var/www/project
+
+$ php ./composer.phar install
+
+$ cp ./.env.example ./.env
+
+$ nano .env
 ```
-# Base URL
-SS_BASE_URL="http://localhost"
 
-# DB credentials
-SS_DATABASE_CLASS="MySQLPDODatabase"
-SS_DATABASE_SERVER="docker.for.mac.localhost"
-SS_DATABASE_PASSWORD="root"
-SS_DATABASE_USERNAME="root"
-SS_DATABASE_NAME="Groot"
+#### 6. Fix permission issues
 
-# ENV
-SS_ENVIRONMENT_TYPE="dev"
-SS_DEFAULT_ADMIN_USERNAME="admin"
-SS_DEFAULT_ADMIN_PASSWORD="admin"
+```bash
+$ chown -R www-data ./ 
 
-# JWT
-JWT_PREFIX=EmICNLXAtoSi
-JWT_SIGNER_KEY=FWXXhVdNd8s1
+$ chgrp -R www-data ./ 
 
+$ chmod -R 777 ./
 ```
-6. Open browser and navigate to `http://localhost/dev/build?flush=1` to init the database tables and cache configs
-7. Navigate to `http://localhost/main` and enjoy!
+
+#### 7. Run services
+
+```bash
+$ service nginx start
+
+$ service php7.2-fpm start
+```
+
+#### 8. Build database schema and tables
+
+Open browser and navigate to `http://<your ip or domain name>:<your port>/dev/build?flush=1`
+
+#### 9. Enjoy
+
+Navigate to `http://<your ip or domain name>:<your port>/main` and enjoy!
 
 ### Deploy manually
 
-1. Check server requirements by visiting `http://localhost/install.php`
-2. A template Nginx config file can be found in `https://docs.silverstripe.org/en/4/getting_started/installation/how_to/configure_nginx/` 
-3. If you want to use Apache, be sure to let it pass `Authorization` correctly. See `https://github.com/Firesphere/silverstripe-graphql-jwt/issues/15`.
+1. Check server requirements by visiting `http://<your ip or domain name>:<your port>/install.php`
+2. A template Nginx config file can be found in [https://docs.silverstripe.org/en/4/getting_started/installation/how_to/configure_nginx](https://docs.silverstripe.org/en/4/getting_started/installation/how_to/configure_nginx).
+3. If you want to use Apache, be sure to let it pass `Authorization` correctly. See [https://github.com/Firesphere/silverstripe-graphql-jwt/issues/15](https://github.com/Firesphere/silverstripe-graphql-jwt/issues/15).
