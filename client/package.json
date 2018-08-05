@@ -22,6 +22,8 @@
     "axios": "^0.18.0",
     "empty": "^0.10.1",
     "graphql": "^0.13.2",
+    "graphql-extractor": "^1.0.1",
+    "graphql-query-compress": "^1.0.11",
     "graphql-tag": "latest",
     "npm": "^6.2.0",
     "react": "^16.4.1",
