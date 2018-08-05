@@ -2,27 +2,12 @@
 
 import type { Song } from "../models/Song";
 import AxiosService from "./AxiosService";
+import fetchAllSongsQuery from "../graphql/fetchAllSongs.graphql";
+import fetchSongLyricQuery from "../graphql/fetchSongLyric.graphql";
 
 export default class SongService {
     static fetchAllSongs(): Promise<Array<Song>> {
-        const query = `
-query {
-    readSongs {
-        ID
-        Title
-        Length
-        Artist
-        Album
-        Disc
-        Track
-        StreamFile {
-            id
-            url
-        }
-    }
-}
-        `;
-        return AxiosService.getAxiosInstance(query)
+        return AxiosService.getAxiosInstance(fetchAllSongsQuery)
             .request()
             .then(response => response.data)
             .then(data => {
@@ -33,22 +18,14 @@ query {
     static fetchSongLyric(
         songID: number
     ): Promise<{ txtLyric: string, lrcLyric: string }> {
-        const query = `
-query ($id: ID!){
-  readOneSong(ID: $id) {
-    TXTLyric
-    LRCLyric
-  }
-}
-`;
         const variables = {
             id: songID
         };
-        return AxiosService.getAxiosInstance(query, variables)
+        return AxiosService.getAxiosInstance(fetchSongLyricQuery, variables)
             .request()
             .then(response => response.data)
             .then(data => {
-                const container = data.data.readOneSong || {};
+                const container = data.data["readOneSong"] || {};
                 return {
                     txtLyric: container.TXTLyric,
                     lrcLyric: container.LRCLyric

@@ -2,22 +2,16 @@
 
 import type { Playlist } from "../models/Playlist";
 import AxiosService from "./AxiosService";
+import fetchAllPlaylistsQuery from "../graphql/fetchAllPlaylists.graphql";
+import fetchOnePlaylistQuery from "../graphql/fetchOnePlaylist.graphql";
+import createPlaylistQuery from "../graphql/createPlaylist.graphql";
+import removePlaylistQuery from "../graphql/removePlaylist.graphql";
+import addSongToPlaylistQuery from "../graphql/addSongToPlaylist.graphql";
+import removeSongFromPlaylistQuery from "../graphql/removeSongFromPlaylist.graphql";
+
 export default class PlaylistService {
     static fetchAllPlaylists(): Promise<Array<Playlist>> {
-        const query = `
-{
-    readPlaylists {
-        ID
-        ClassName
-        LastEdited
-        Created
-        Title
-        Description
-        NumberOfSongs
-    }
-}
-        `;
-        return AxiosService.getAxiosInstance(query)
+        return AxiosService.getAxiosInstance(fetchAllPlaylistsQuery)
             .request()
             .then(response => response.data)
             .then(data => {
@@ -26,38 +20,10 @@ export default class PlaylistService {
     }
 
     static fetchOnePlaylist(playlistID: number): Promise<Playlist> {
-        const query = `
-query ($playlistID: ID!){
-  readOnePlaylist(ID: $playlistID) {
-    ID
-    ClassName
-    LastEdited
-    Created
-    Title
-    Description
-    Songs {
-      ID
-      ClassName
-      LastEdited
-      Created
-      Title
-      Length
-      Artist
-      Album
-      Disc
-      Track
-      StreamFile {
-        id
-        url
-      }
-    }
-  }
-}
-        `;
         const variables = {
             playlistID: playlistID
         };
-        return AxiosService.getAxiosInstance(query, variables)
+        return AxiosService.getAxiosInstance(fetchOnePlaylistQuery, variables)
             .request()
             .then(response => response.data)
             .then(data => {
@@ -69,19 +35,6 @@ query ($playlistID: ID!){
         title: string,
         description: string
     ): Promise<Playlist> {
-        const query = `
-mutation ($input: PlaylistCreateInputType!) {
-  createPlaylist(Input: $input) {
-    ID
-    ClassName
-    LastEdited
-    Created
-    Title
-    Description
-    NumberOfSongs
-  }
-}
-        `;
         const variables = {
             input: {
                 Title: title,
@@ -89,7 +42,7 @@ mutation ($input: PlaylistCreateInputType!) {
             }
         };
 
-        return AxiosService.getAxiosInstance(query, variables)
+        return AxiosService.getAxiosInstance(createPlaylistQuery, variables)
             .request()
             .then(response => response.data)
             .then(data => {
@@ -98,18 +51,11 @@ mutation ($input: PlaylistCreateInputType!) {
     }
 
     static removePlaylist(playlistID: number): Promise<void> {
-        const query = `
-mutation ($playlistIDs: [ID]!) {
-  deletePlaylist(IDs: $playlistIDs) {
-    ID
-  }
-}
-        `;
         const variables = {
             playlistIDs: [playlistID]
         };
 
-        return AxiosService.getAxiosInstance(query, variables)
+        return AxiosService.getAxiosInstance(removePlaylistQuery, variables)
             .request()
             .then(response => response.data)
             .then(data => {});
@@ -119,25 +65,12 @@ mutation ($playlistIDs: [ID]!) {
         songID: number,
         playlistID: number
     ): Promise<Playlist> {
-        const query = `
-mutation ($songID: Int, $playlistID: Int) {
-  addSongToPlaylist(SongID: $songID, PlaylistID: $playlistID) {
-    ID
-    ClassName
-    LastEdited
-    Created
-    Title
-    Description
-    NumberOfSongs
-  }
-}
-        `;
         const variables = {
             songID: songID,
             playlistID: playlistID
         };
 
-        return AxiosService.getAxiosInstance(query, variables)
+        return AxiosService.getAxiosInstance(addSongToPlaylistQuery, variables)
             .request()
             .then(response => response.data)
             .then(data => {
@@ -149,25 +82,12 @@ mutation ($songID: Int, $playlistID: Int) {
         songID: number,
         playlistID: number
     ): Promise<Playlist> {
-        const query = `
-mutation ($songID: Int, $playlistID: Int) {
-  removeSongFromPlaylist(SongID: $songID, PlaylistID: $playlistID) {
-    ID
-    ClassName
-    LastEdited
-    Created
-    Title
-    Description
-    NumberOfSongs
-  }
-}
-        `;
         const variables = {
             songID: songID,
             playlistID: playlistID
         };
 
-        return AxiosService.getAxiosInstance(query, variables)
+        return AxiosService.getAxiosInstance(removeSongFromPlaylistQuery, variables)
             .request()
             .then(response => response.data)
             .then(data => {

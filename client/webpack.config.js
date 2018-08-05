@@ -15,6 +15,18 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [ 'style-loader', 'css-loader' ]
+            },
+            {
+                test: /\.graphql?$/,
+                use: [
+                    {
+                        loader: 'webpack-graphql-loader',
+                        options: {
+                            output: "string",
+                            minify: true
+                        }
+                    }
+                ]
             }
         ]
     },

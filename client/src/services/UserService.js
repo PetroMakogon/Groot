@@ -1,24 +1,15 @@
+// @flow
 import AxiosService from "./AxiosService";
 import type { User } from "../models/User";
+import createTokenQuery from "../graphql/createToken.graphql";
 
 export default class UserService {
     static createToken(email: string, password: string): Promise<User> {
-        const query = `
-mutation ($email: String!, $password: String!) {
-  createToken(Email: $email, Password: $password) {
-    ID
-    FirstName
-    Surname
-    Email
-    Token
-  }
-}
-        `;
         const variables = {
             email,
             password
         };
-        return AxiosService.getAxiosInstance(query, variables)
+        return AxiosService.getAxiosInstance(createTokenQuery, variables)
             .request()
             .then(response => response.data)
             .then(data => {
