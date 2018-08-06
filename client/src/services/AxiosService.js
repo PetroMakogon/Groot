@@ -15,7 +15,7 @@ export default class AxiosService {
 
         // webpack graphql loader will trim "query" at the beginning
         let compressedQuery = compress(query);
-        if (!compressedQuery.startsWith("query")) {
+        if (compressedQuery.startsWith("{")) {
             compressedQuery = "query" + compressedQuery;
         }
 
