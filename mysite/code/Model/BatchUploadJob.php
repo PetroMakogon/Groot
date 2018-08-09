@@ -56,7 +56,7 @@ class BatchUploadJob extends DataObject
 
         if (!$this->isInDB()) {
             $uploader = UploadField::create('StreamFiles', 'The Song Files');
-            $uploader->setFolderName(Song::FOLDER_NAME);
+            $uploader->setFolderName(Song::MP3_FOLDER_NAME);
             $uploader->getValidator()->setAllowedExtensions(['mp3']);
             $uploader->getValidator()->setAllowedMaxFileSize('1024M');
             $uploader->setAllowedMaxFileNumber(1000);

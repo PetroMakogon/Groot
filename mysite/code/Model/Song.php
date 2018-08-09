@@ -8,6 +8,7 @@ use getid3_lib;
 use GraphQL\Type\Definition\ResolveInfo;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\File;
+use SilverStripe\Assets\Image;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\NumericField;
@@ -36,10 +37,12 @@ use SilverStripe\Security\Security;
  * @property int Disc
  * @property int Track
  * @property File StreamFile
+ * @property File CoverImage
  */
 class Song extends DataObject implements ScaffoldingProvider
 {
-    public const FOLDER_NAME = 'Songs';
+    public const MP3_FOLDER_NAME = 'Songs';
+    public const COVER_FOLDER_NAME = 'Covers';
 
     private static $table_name = 'Song';
 
@@ -54,10 +57,11 @@ class Song extends DataObject implements ScaffoldingProvider
         'LRCLyric' => 'Text'
     ];
 
-    private static $owns = ['StreamFile'];
+    private static $owns = ['StreamFile', 'CoverImage'];
 
     private static $has_one = [
-        'StreamFile' => File::class
+        'StreamFile' => File::class,
+        'CoverImage' => Image::class
     ];
 
     private static $belongs_many_many = [
@@ -81,13 +85,17 @@ class Song extends DataObject implements ScaffoldingProvider
     {
         $fields = FieldList::create(TabSet::create('Root'));
 
-        $uploader = UploadField::create('StreamFile', 'The Song File');
-        $uploader->setFolderName(self::FOLDER_NAME);
-        $uploader->getValidator()->setAllowedExtensions(['mp3']);
-        $uploader->getValidator()->setAllowedMaxFileSize('50M');
+        $mp3Uploader = UploadField::create('StreamFile', 'The Song File');
+        $mp3Uploader->setFolderName(self::MP3_FOLDER_NAME);
+        $mp3Uploader->getValidator()->setAllowedExtensions(['mp3']);
+        $mp3Uploader->getValidator()->setAllowedMaxFileSize('50M');
+
+        $coverUploader = UploadField::create('CoverImage', 'The Cover Image');
+        $coverUploader->setFolderName(self::COVER_FOLDER_NAME);
 
         $fields->addFieldsToTab('Root.Main', [
-            $uploader,
+            $mp3Uploader,
+            $coverUploader,
             CheckboxField::create('ExtractInfo', 'Extract Information from Mp3 File?'),
             TextField::create('Title'),
             TextField::create('Artist'),
@@ -173,6 +181,18 @@ class Song extends DataObject implements ScaffoldingProvider
 
         return $result;
     }
+
+    /*
+    protected function onAfterWrite()
+    {
+        if ($this->CoverImage && $this->CoverImage->getWidth() > 100 && $this->CoverImage->getHeight() > 100) {
+            $cropped = $this->CoverImage->getImageBackend()->crop(100, 100, 100, 100);
+            $result = $cropped->writeTo(PUBLIC_PATH . '/cropped.png');
+        }
+
+        parent::onAfterWrite();
+    }
+    */
 
     /**
      * @param SchemaScaffolder $schema
