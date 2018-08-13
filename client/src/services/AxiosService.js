@@ -24,10 +24,13 @@ export default class AxiosService {
             variables: variables
         };
 
+        /*
+        * TODO: wait until backend support persisted query officially
         if (persistedQuery[compressedQuery]) {
             delete data.query;
             data.id = persistedQuery[compressedQuery];
         }
+        */
 
         return axios.create({
             url: "/graphql",
