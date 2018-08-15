@@ -78,7 +78,7 @@ $ sudo docker run \
 -p 80:80 \
 -v "$PWD":/var/www/project:delegated \
 --name groot-build  \
-groot-build /bin/bash
+groot-build
 
 $ sudo docker exec -it groot-build /bin/bash
 ```
