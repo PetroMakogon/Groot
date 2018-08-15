@@ -15,12 +15,11 @@ use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\GraphQL\Scaffolding\Interfaces\ResolverInterface;
+use SilverStripe\GraphQL\OperationResolver;
 use SilverStripe\GraphQL\Scaffolding\Interfaces\ScaffoldingProvider;
 use SilverStripe\GraphQL\Scaffolding\Scaffolders\ListQueryScaffolder;
 use SilverStripe\GraphQL\Scaffolding\Scaffolders\SchemaScaffolder;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionFailureException;
 use SilverStripe\Security\Security;
@@ -202,23 +201,33 @@ class Song extends DataObject implements ScaffoldingProvider
      */
     public function provideGraphQLScaffolding(SchemaScaffolder $schema): SchemaScaffolder
     {
-        $song = $schema->type(Song::class)->addAllFields(true);
+        $song = $schema->type(Song::class)->addAllFields();
+
+        $file = $schema->type(File::class)->addAllFields();
+
+        $song->nestedQuery('StreamFile', $file->operation(SchemaScaffolder::READ));
 
         /* @var $readSongs ListQueryScaffolder */
         $readSongs = $song->operation(SchemaScaffolder::READ);
         $readSongs->addArg('keyword', 'String');
         $readSongs->addSortableFields(['Title', 'Artist', 'Album']);
         $readSongs->setUsePagination(false);
-        $readSongs->setResolver(new class implements ResolverInterface
+        $readSongs->setName('readSongs');
+
+        $readSongs->setResolver(new class implements OperationResolver
         {
             /**
-             * @param DataObjectInterface $object
+             * Invoked by the Executor class to resolve this mutation / query
+             * @see Executor
+             *
+             * @param mixed $object
              * @param array $args
-             * @param array $context
+             * @param mixed $context
              * @param ResolveInfo $info
              * @return mixed
+             * @throws \SilverStripe\Security\PermissionFailureException
              */
-            public function resolve($object, $args, $context, $info)
+            public function resolve($object, array $args, $context, ResolveInfo $info)
             {
                 if (!Permission::check('ADMIN', 'any', Security::getCurrentUser())) {
                     throw new PermissionFailureException('Permission denied');

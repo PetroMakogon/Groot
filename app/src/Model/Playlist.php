@@ -90,8 +90,9 @@ class Playlist extends DataObject implements ScaffoldingProvider
         $readPlaylists = $playlist->operation(SchemaScaffolder::READ);
         $readPlaylists->addSortableFields(['Title']);
         $readPlaylists->setUsePagination(false);
+        $readPlaylists->setName('readPlaylists');
 
-        $playlist->operation(SchemaScaffolder::READ_ONE);
+        $playlist->operation(SchemaScaffolder::READ_ONE)->setName('readOnePlaylist');
         $playlist->operation(SchemaScaffolder::CREATE);
         $playlist->operation(SchemaScaffolder::DELETE);
         $playlist->operation(SchemaScaffolder::UPDATE);
