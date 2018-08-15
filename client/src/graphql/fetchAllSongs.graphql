@@ -7,9 +7,6 @@ query {
         Album
         Disc
         Track
-        StreamFile {
-            id
-            url
-        }
+        StreamFileURL
     }
 }

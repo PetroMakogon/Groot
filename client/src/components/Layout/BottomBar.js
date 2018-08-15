@@ -35,7 +35,7 @@ const mapDispatchToProps = (dispatch: *) => {
 class BottomBar extends Component<Props> {
     render() {
         const song = this.props.playingNow.song || null;
-        const url = (song && song.StreamFile && song.StreamFile.url) || null;
+        const url = (song && song.StreamFileURL) || null;
         const source = url ? <source src={url} type="audio/mp3" /> : null;
 
         return (

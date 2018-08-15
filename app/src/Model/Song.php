@@ -12,6 +12,7 @@ use SilverStripe\Assets\Image;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
@@ -37,6 +38,7 @@ use SilverStripe\Security\Security;
  * @property int Track
  * @property File StreamFile
  * @property File CoverImage
+ * @property string StreamFileURL
  */
 class Song extends DataObject implements ScaffoldingProvider
 {
@@ -46,14 +48,15 @@ class Song extends DataObject implements ScaffoldingProvider
     private static $table_name = 'Song';
 
     private static $db = [
-        'Title'    => 'Varchar(255)',
-        'Length'   => 'Decimal',
-        'Artist'   => 'Varchar(255)',
-        'Album'    => 'Varchar(255)',
-        'Disc'     => 'Int',
-        'Track'    => 'Int',
-        'TXTLyric' => 'Text',
-        'LRCLyric' => 'Text'
+        'Title'         => 'Varchar(255)',
+        'Length'        => 'Decimal',
+        'Artist'        => 'Varchar(255)',
+        'Album'         => 'Varchar(255)',
+        'Disc'          => 'Int',
+        'Track'         => 'Int',
+        'TXTLyric'      => 'Text',
+        'LRCLyric'      => 'Text',
+        'StreamFileURL' => 'Text'
     ];
 
     private static $owns = ['StreamFile', 'CoverImage'];
@@ -104,6 +107,7 @@ class Song extends DataObject implements ScaffoldingProvider
             NumericField::create('Track'),
             TextareaField::create('TXTLyric'),
             TextareaField::create('LRCLyric'),
+            ReadonlyField::create('StreamFileURL'),
         ]);
 
         return $fields;
@@ -178,6 +182,10 @@ class Song extends DataObject implements ScaffoldingProvider
             $result->addFieldError('Title', 'Title cannot be empty');
         }
 
+        if (!$this->StreamFileURL) {
+            $this->StreamFileURL = $this->StreamFile->getURL();
+        }
+
         return $result;
     }
 
@@ -202,10 +210,6 @@ class Song extends DataObject implements ScaffoldingProvider
     public function provideGraphQLScaffolding(SchemaScaffolder $schema): SchemaScaffolder
     {
         $song = $schema->type(Song::class)->addAllFields();
-
-        $file = $schema->type(File::class)->addAllFields();
-
-        $song->nestedQuery('StreamFile', $file->operation(SchemaScaffolder::READ));
 
         /* @var $readSongs ListQueryScaffolder */
         $readSongs = $song->operation(SchemaScaffolder::READ);
@@ -244,7 +248,13 @@ class Song extends DataObject implements ScaffoldingProvider
                     ]);
                 }
 
-                return $list;
+                $arr = $list->toArray();
+                foreach ($arr as $song) {
+                    /* @var Song $song */
+                    $song->StreamFileURL = $song->StreamFile->getAbsoluteURL();
+                }
+
+                return $arr;
             }
         });
 

@@ -2,7 +2,6 @@
 
 import axios from "axios";
 import StorageService from "./StorageService";
-import persistedQuery from "../graphql/persisted_query.json";
 import compress from "graphql-query-compress";
 
 export default class AxiosService {

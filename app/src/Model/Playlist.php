@@ -92,10 +92,11 @@ class Playlist extends DataObject implements ScaffoldingProvider
         $readPlaylists->setUsePagination(false);
         $readPlaylists->setName('readPlaylists');
 
+        // In silverstripe-graphql v2, there is no default operation name been generated
         $playlist->operation(SchemaScaffolder::READ_ONE)->setName('readOnePlaylist');
-        $playlist->operation(SchemaScaffolder::CREATE);
-        $playlist->operation(SchemaScaffolder::DELETE);
-        $playlist->operation(SchemaScaffolder::UPDATE);
+        $playlist->operation(SchemaScaffolder::CREATE)->setName('createPlaylist');
+        $playlist->operation(SchemaScaffolder::DELETE)->setName('deletePlaylist');
+        $playlist->operation(SchemaScaffolder::UPDATE)->setName('updatePlaylist');
     }
 
     /**

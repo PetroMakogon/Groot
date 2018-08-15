@@ -1,4 +1,4 @@
-mutation ($input: PlaylistCreateInputType!) {
+mutation ($input: ModelPlaylistCreateInputType!) {
     createPlaylist(Input: $input) {
         ID
         ClassName

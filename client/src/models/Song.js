@@ -13,5 +13,6 @@ export type Song = {
     Track: number,
     StreamFile?: CMSFile,
     TXTLyric: string,
-    LRCLyric: string
+    LRCLyric: string,
+    StreamFileURL?: string
 };

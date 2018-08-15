@@ -17,10 +17,7 @@ query ($playlistID: ID!){
             Album
             Disc
             Track
-            StreamFile {
-                id
-                url
-            }
+            StreamFileURL
         }
     }
 }
