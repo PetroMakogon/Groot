@@ -56,7 +56,7 @@ class Song extends DataObject implements ScaffoldingProvider
         'Track'         => 'Int',
         'TXTLyric'      => 'Text',
         'LRCLyric'      => 'Text',
-        'StreamFileURL' => 'Text'
+        'StreamFileURL' => 'Text' // This is just a placeholder property for now, the actual value will be populated when access
     ];
 
     private static $owns = ['StreamFile', 'CoverImage'];
@@ -107,7 +107,7 @@ class Song extends DataObject implements ScaffoldingProvider
             NumericField::create('Track'),
             TextareaField::create('TXTLyric'),
             TextareaField::create('LRCLyric'),
-            ReadonlyField::create('StreamFileURL'),
+            ReadonlyField::create('StreamFileURL')->setValue($this->getStreamFileURL()),
         ]);
 
         return $fields;
@@ -182,11 +182,15 @@ class Song extends DataObject implements ScaffoldingProvider
             $result->addFieldError('Title', 'Title cannot be empty');
         }
 
-        if (!$this->StreamFileURL) {
-            $this->StreamFileURL = $this->StreamFile->getURL();
-        }
-
         return $result;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStreamFileURL()
+    {
+        return trim($this->StreamFile->getAbsoluteURL());
     }
 
     /*
