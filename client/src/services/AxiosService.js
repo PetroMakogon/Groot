@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import StorageService from "./StorageService";
+import persistedQueryMapping from "../graphql/persisted-query-mapping.json";
 import compress from "graphql-query-compress";
 
 export default class AxiosService {
@@ -23,13 +24,10 @@ export default class AxiosService {
             variables: variables
         };
 
-        /*
-        * TODO: wait until backend support persisted query officially
-        if (persistedQuery[compressedQuery]) {
+        if (persistedQueryMapping[compressedQuery]) {
             delete data.query;
-            data.id = persistedQuery[compressedQuery];
+            data.id = persistedQueryMapping[compressedQuery];
         }
-        */
 
         return axios.create({
             url: "/graphql",
