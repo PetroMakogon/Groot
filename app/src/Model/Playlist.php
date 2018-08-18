@@ -3,18 +3,24 @@
 namespace Model;
 
 use GraphQL\Type\Definition\ResolveInfo;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\GraphQL\OperationResolver;
 use SilverStripe\GraphQL\Scaffolding\Interfaces\ResolverInterface;
 use SilverStripe\GraphQL\Scaffolding\Interfaces\ScaffoldingProvider;
 use SilverStripe\GraphQL\Scaffolding\Scaffolders\ListQueryScaffolder;
 use SilverStripe\GraphQL\Scaffolding\Scaffolders\SchemaScaffolder;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\ManyManyList;
+use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionFailureException;
 use SilverStripe\Security\Security;
+use UndefinedOffset\SortableGridField\Forms\GridFieldSortableRows;
 
 /**
  * Class Playlist
@@ -39,6 +45,12 @@ class Playlist extends DataObject implements ScaffoldingProvider
         'Songs' => Song::class
     ];
 
+    private static $many_many_extraFields = [
+        'Songs' => [
+            'SortOrder' => 'Int'
+        ]
+    ];
+
     public function validate()
     {
         $result = parent::validate();
@@ -57,6 +69,23 @@ class Playlist extends DataObject implements ScaffoldingProvider
         $this->NumberOfSongs = $this->Songs()->count();
     }
 
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
+
+        $conf = GridFieldConfig_RelationEditor::create(1000);
+        $conf->addComponent(new GridFieldSortableRows('SortOrder'));
+
+        $fields->addFieldToTab(
+            'Root.Songs',
+            new GridField(
+                'Songs',
+                'Songs',
+                $this->getManyManyComponents('Songs')->sort('SortOrder'),
+                $conf));
+        return $fields;
+    }
+
     /**
      * @param SchemaScaffolder $schema
      * @return SchemaScaffolder
@@ -69,6 +98,8 @@ class Playlist extends DataObject implements ScaffoldingProvider
         $this->provideGraphQLScaffoldingCRUD($schema);
 
         $this->provideGraphQLScaffoldingAddSong($schema);
+
+        $this->provideGraphQLScaffoldingReorderSong($schema);
 
         $this->provideGraphQLScaffoldingRemoveSong($schema);
 
@@ -85,10 +116,26 @@ class Playlist extends DataObject implements ScaffoldingProvider
         /* @var $readSongs ListQueryScaffolder */
         $readSongs = $playlist->nestedQuery('Songs');
         $readSongs->setUsePagination(false);
+        $readSongs->setResolver(new class implements OperationResolver
+        {
+            /**
+             * Invoked by the Executor class to resolve this mutation / query
+             * @see Executor
+             *
+             * @param Playlist $object
+             * @param array $args
+             * @param mixed $context
+             * @param ResolveInfo $info
+             * @return mixed
+             */
+            public function resolve($object, array $args, $context, ResolveInfo $info)
+            {
+                return $object->Songs()->sort('SortOrder');
+            }
+        });
 
         /* @var $readPlaylists ListQueryScaffolder */
         $readPlaylists = $playlist->operation(SchemaScaffolder::READ);
-        $readPlaylists->addSortableFields(['Title']);
         $readPlaylists->setUsePagination(false);
         $readPlaylists->setName('readPlaylists');
 
@@ -158,6 +205,79 @@ class Playlist extends DataObject implements ScaffoldingProvider
 
                 $playlist->Songs()->add($song->data());
                 $playlist->write();
+                return $playlist;
+            }
+        });
+    }
+
+    /**
+     * @param SchemaScaffolder $schema
+     * @throws \Exception
+     * @throws \SilverStripe\ORM\ValidationException
+     * @throws \InvalidArgumentException
+     */
+    private function provideGraphQLScaffoldingReorderSong(SchemaScaffolder $schema): void
+    {
+        $addSong = $schema->mutation('reorderSongsInPlaylist', Playlist::class);
+        $addSong->addArgs([
+            'PlaylistID' => 'Int',
+            'SongIDs'    => 'String'
+        ]);
+        $addSong->setResolver(new class implements OperationResolver
+        {
+            /**
+             * Invoked by the Executor class to resolve this mutation / query
+             * @see Executor
+             *
+             * @param mixed $object
+             * @param array $args
+             * @param mixed $context
+             * @param ResolveInfo $info
+             * @return mixed
+             */
+            public function resolve($object, array $args, $context, ResolveInfo $info)
+            {
+                if (!Permission::check('ADMIN', 'any', Security::getCurrentUser())) {
+                    throw new PermissionFailureException('Permission denied');
+                }
+
+                $validationResult = new ValidationResult();
+
+                $songIDs = json_decode($args['SongIDs'] ?? '') ?? [];
+                if (!$songIDs) {
+                    $validationResult->addFieldError('SongIDs', 'Song ID List can not be empty');
+                    throw new ValidationException($validationResult);
+                }
+
+                $playlistID = $args['PlaylistID'] ?? null;
+                if (!$playlistID) {
+                    $validationResult->addFieldError('PlaylistID', 'Playlist ID can not be empty');
+                    throw new ValidationException($validationResult);
+                }
+
+                /* @var $playlist Playlist */
+                $playlist = Playlist::get()->byID($playlistID);
+
+                if (!$playlist || !$playlist->exists()) {
+                    $validationResult->addFieldError('PlaylistID', 'Playlist does not exist');
+                    throw new ValidationException($validationResult);
+                }
+
+                $component = $playlist->getManyManyComponents('Songs');
+                $localKey = $component->getLocalKey();
+                $foreignKey = $component->getForeignKey();
+                DB::get_conn()->transactionStart();
+                foreach ($songIDs as $index => $value) {
+                    $update = SQLUpdate::create($component->getJoinTable());
+                    $update->addWhere([
+                        $foreignKey   => $playlist->ID,
+                        $localKey => $value
+                    ]);
+                    $update->assign('SortOrder', $index);
+                    $update->execute();
+                }
+                DB::get_conn()->transactionEnd();
+
                 return $playlist;
             }
         });

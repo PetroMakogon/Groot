@@ -8,6 +8,7 @@ import createPlaylistQuery from "../graphql/createPlaylist.graphql";
 import removePlaylistQuery from "../graphql/removePlaylist.graphql";
 import addSongToPlaylistQuery from "../graphql/addSongToPlaylist.graphql";
 import removeSongFromPlaylistQuery from "../graphql/removeSongFromPlaylist.graphql";
+import reorderSongsInPlaylistQuery from "../graphql/reorderSongsInPlaylist.graphql";
 
 export default class PlaylistService {
     static fetchAllPlaylists(): Promise<Array<Playlist>> {
@@ -87,11 +88,34 @@ export default class PlaylistService {
             playlistID: playlistID
         };
 
-        return AxiosService.getAxiosInstance(removeSongFromPlaylistQuery, variables)
+        return AxiosService.getAxiosInstance(
+            removeSongFromPlaylistQuery,
+            variables
+        )
             .request()
             .then(response => response.data)
             .then(data => {
                 return data.data["removeSongFromPlaylist"];
+            });
+    }
+
+    static reorderSongsInPlaylist(
+        playlistID: number,
+        songIDs: Array<number>
+    ): Promise<Playlist> {
+        const variables = {
+            playlistID: playlistID,
+            songIDs: JSON.stringify(songIDs)
+        };
+
+        return AxiosService.getAxiosInstance(
+            reorderSongsInPlaylistQuery,
+            variables
+        )
+            .request()
+            .then(response => response.data)
+            .then(data => {
+                return data.data["reorderSongsInPlaylist"];
             });
     }
 }

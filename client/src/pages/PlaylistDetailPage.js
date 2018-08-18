@@ -8,6 +8,7 @@ import SongList from "../components/Song/SongList";
 import type { RootState } from "../reducers/root";
 import { loadPlaylistDetailAsync } from "../actions/Playlist/loadPlaylistDetail";
 import { addSongToPlaylistAsync } from "../actions/Playlist/addSongToPlaylistAsync";
+import { moveSongToTopInPlaylistAsync } from "../actions/Playlist/moveSongToTopInPlaylistAsync";
 import type { AllPlaylistsPageState } from "../reducers/allPlaylistsPageState";
 import { showAddToPlaylistModal } from "../actions/Modal/showAddToPlaylistModal";
 import { hideSongOperationModal } from "../actions/Modal/hideSongOperationModal";
@@ -16,6 +17,7 @@ import { loadAllPlaylistsAsync } from "../actions/Playlist/loadAllPlaylists";
 import type { PlaylistDetailPageState } from "../reducers/playlistDetailPageState";
 import ListModal from "../components/Modal/ListModal";
 import { removeSongFromPlaylistAsync } from "../actions/Playlist/removeSongFromPlaylistAsync";
+import PlaylistService from "../services/PlaylistService";
 
 type Props = {
     className?: string,
@@ -28,6 +30,7 @@ type Props = {
     loadPlaylistAsync: () => void,
     addSongToPlaylist: (song: Song, playlist: Playlist) => void,
     removeSongFromPlaylistAsync: (song: Song, playlist: Playlist) => void,
+    moveSongToTopInPlaylistAsync: (song: Song, playlist: Playlist) => void,
     hideSongOperationModal: () => void,
     showAddToPlaylistModal: (song: Song) => void,
     hideAddToPlaylistModal: () => void
@@ -52,6 +55,9 @@ const mapDispatchToProps = (dispatch: *, props: Props) => {
         },
         removeSongFromPlaylistAsync: (song: Song, playlist: Playlist) => {
             dispatch(removeSongFromPlaylistAsync(song, playlist));
+        },
+        moveSongToTopInPlaylistAsync: (song: Song, playlist: Playlist) => {
+            dispatch(moveSongToTopInPlaylistAsync(song, playlist));
         },
         hideSongOperationModal: () => {
             dispatch(hideSongOperationModal());
@@ -115,6 +121,16 @@ class PlaylistDetailPage extends Component<Props> {
                         this.props.hideSongOperationModal();
                         this.props.hideAddToPlaylistModal();
                     }
+                }
+            });
+
+            items.push({
+                title: "Move to top",
+                onClick: () => {
+                    if (!song || !playlist) return;
+                    this.props.moveSongToTopInPlaylistAsync(song, playlist);
+                    this.props.hideSongOperationModal();
+                    this.props.hideAddToPlaylistModal();
                 }
             });
         }

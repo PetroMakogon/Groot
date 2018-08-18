@@ -1,0 +1,9 @@
+mutation ($playlistID: Int, $songIDs: String) {
+    reorderSongsInPlaylist(PlaylistID: $playlistID, SongIDs: $songIDs) {
+        ID
+        Title
+        Songs {
+            ID
+        }
+    }
+}
