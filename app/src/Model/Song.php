@@ -262,7 +262,7 @@ class Song extends DataObject implements ScaffoldingProvider
             }
         });
 
-        $song->operation(SchemaScaffolder::READ_ONE);
+        $song->operation(SchemaScaffolder::READ_ONE)->setName('readOneSong');
 
         return $schema;
     }
