@@ -78,11 +78,12 @@ class Playlist extends DataObject implements ScaffoldingProvider
 
         $fields->addFieldToTab(
             'Root.Songs',
-            new GridField(
+            $grid = new GridField(
                 'Songs',
                 'Songs',
                 $this->getManyManyComponents('Songs')->sort('SortOrder'),
                 $conf));
+
         return $fields;
     }
 
@@ -270,10 +271,10 @@ class Playlist extends DataObject implements ScaffoldingProvider
                 foreach ($songIDs as $index => $value) {
                     $update = SQLUpdate::create($component->getJoinTable());
                     $update->addWhere([
-                        $foreignKey   => $playlist->ID,
-                        $localKey => $value
+                        $foreignKey => $playlist->ID,
+                        $localKey   => $value
                     ]);
-                    $update->assign('SortOrder', $index);
+                    $update->assign('SortOrder', $index + 1);
                     $update->execute();
                 }
                 DB::get_conn()->transactionEnd();
