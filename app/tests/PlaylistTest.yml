@@ -1,0 +1,22 @@
+Model\Song:
+  Night:
+    Title: night
+    Artist: a_hisa
+    Album: night
+    Length: 264.83
+  PerfectTime:
+    Title: Perfect Time
+    Artist: 小林未郁/mpi
+    Album: 七つの大罪 オリジナル・サウンドトラック
+    Length: 283.79
+
+Model\Playlist:
+  EmptyPlaylist:
+    Title: Empty Playlist
+    Description: Playlist For Test
+    NumberOfSongs: 0
+    Songs:
+      - =>Model\Song.Night:
+          SortOrder: 2
+      - =>Model\Song.PerfectTime:
+          SortOrder: 1
