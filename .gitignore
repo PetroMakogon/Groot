@@ -9,5 +9,4 @@ public/scripts/*.hot-update.json
 public/scripts/*.hot-update.js
 public/scripts/hot
 bundle.js.map
-bundle.js
 client/graphql\.config\.json

@@ -5,6 +5,7 @@ namespace Model;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\File;
 use SilverStripe\Core\Path;
+use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\TabSet;
@@ -22,6 +23,7 @@ use SilverStripe\ORM\DataObject;
  * @property string Remark
  *
  * @method ArrayList StreamFiles
+ * @method Playlist Playlist
  */
 class BatchUploadJob extends DataObject
 {
@@ -43,6 +45,10 @@ class BatchUploadJob extends DataObject
         'StreamFiles' => File::class
     ];
 
+    private static $has_one = [
+        'Playlist' => Playlist::class
+    ];
+
     private static $summary_fields = [
         'ID',
         'TotalNumberOfFiles',
@@ -50,27 +56,57 @@ class BatchUploadJob extends DataObject
         'Status'
     ];
 
-    public function getCMSfields()
+    public function getCMSFields()
+    {
+        if (!$this->isInDB()) {
+            return $this->getCMSFieldsForCreate();
+        }
+
+        return $this->getCMSFieldsForEdit();
+    }
+
+    private function getCMSFieldsForCreate()
     {
         $fields = FieldList::create(TabSet::create('Root'));
 
-        if (!$this->isInDB()) {
-            $uploader = UploadField::create('StreamFiles', 'The Song Files');
-            $uploader->setFolderName(Song::MP3_FOLDER_NAME);
-            $uploader->getValidator()->setAllowedExtensions(['mp3']);
-            $uploader->getValidator()->setAllowedMaxFileSize('1024M');
-            $uploader->setAllowedMaxFileNumber(1000);
+        $uploader = UploadField::create('StreamFiles', 'The Song Files');
+        $uploader->setFolderName(Song::MP3_FOLDER_NAME);
+        $uploader->getValidator()->setAllowedExtensions(['mp3']);
+        $uploader->getValidator()->setAllowedMaxFileSize('1024M');
+        $uploader->setAllowedMaxFileNumber(1000);
 
-            $fields->addFieldsToTab('Root.Main', [
-                $uploader,
-            ]);
-        } else {
-            $fields->addFieldsToTab('Root.Main', [
-                NumericField::create('TotalNumberOfFiles')->setReadonly(true),
-                NumericField::create('ProcessedNumberOfFiles')->setReadonly(true),
-                TextField::create('Status')->setReadonly(true),
-                TextField::create('Remark')->setReadonly(true)
-            ]);
+        $playlistDropDown = DropdownField::create(
+            'PlaylistID',
+            'Playlist (optional)',
+            Playlist::get()->map('ID', 'Title'));
+        $playlistDropDown->setEmptyString('(Choose a playlist)');
+
+        $fields->addFieldsToTab('Root.Main', [
+            $uploader,
+            $playlistDropDown
+        ]);
+
+        return $fields;
+    }
+
+    private function getCMSFieldsForEdit()
+    {
+        $fields = FieldList::create(TabSet::create('Root'));
+
+        $fields->addFieldsToTab('Root.Main', [
+            NumericField::create('TotalNumberOfFiles')->setReadonly(true),
+            NumericField::create('ProcessedNumberOfFiles')->setReadonly(true),
+            TextField::create('Status')->setReadonly(true),
+            TextField::create('Remark')->setReadonly(true)
+        ]);
+
+        if ($this->Playlist()) {
+            $fields->addFieldToTab('Root.Main',
+                DropdownField::create(
+                    'PlaylistID',
+                    'Playlist (optional)',
+                    Playlist::get()->map('ID', 'Title'))->setDisabled(true)
+            );
         }
 
         return $fields;

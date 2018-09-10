@@ -90,6 +90,7 @@ class Playlist extends DataObject implements ScaffoldingProvider
     /**
      * @param SchemaScaffolder $schema
      * @return SchemaScaffolder
+     * @throws \SilverStripe\Security\PermissionFailureException
      * @throws \SilverStripe\ORM\ValidationException
      * @throws \Exception
      * @throws \InvalidArgumentException
@@ -105,6 +106,54 @@ class Playlist extends DataObject implements ScaffoldingProvider
         $this->provideGraphQLScaffoldingRemoveSong($schema);
 
         return $schema;
+    }
+
+    /**
+     * @param Song|int $song
+     * @throws \Exception
+     */
+    public function addSong($song)
+    {
+        $sortOrder = $this->Songs()->count() + 1;
+        $this->Songs()->add($song, ['SortOrder' => $sortOrder]);
+        $this->write();
+    }
+
+    /**
+     * @param Song|int $song
+     * @throws ValidationException
+     */
+    public function removeSong($song)
+    {
+        if ($song instanceof Song) {
+            $songID = $song->ID;
+        } else {
+            $songID = (int)$song;
+        }
+
+        $this->Songs()->removeByID($songID);
+        $this->write();
+    }
+
+    /**
+     * @param int[] $songIDs
+     */
+    public function updateSongsOrder(array $songIDs)
+    {
+        $component = $this->getManyManyComponents('Songs');
+        $localKey = $component->getLocalKey();
+        $foreignKey = $component->getForeignKey();
+        DB::get_conn()->transactionStart();
+        foreach ($songIDs as $index => $value) {
+            $update = SQLUpdate::create($component->getJoinTable());
+            $update->addWhere([
+                $foreignKey => $this->ID,
+                $localKey   => $value
+            ]);
+            $update->assign('SortOrder', $index + 1);
+            $update->execute();
+        }
+        DB::get_conn()->transactionEnd();
     }
 
     /**
@@ -190,6 +239,7 @@ class Playlist extends DataObject implements ScaffoldingProvider
                     throw new ValidationException($validationResult);
                 }
 
+                /* @var Song $song */
                 $song = Song::get()->byID($songID);
                 if (!$song || !$song->exists()) {
                     $validationResult->addFieldError('SongID', 'Song does not exist');
@@ -204,8 +254,7 @@ class Playlist extends DataObject implements ScaffoldingProvider
                     throw new ValidationException($validationResult);
                 }
 
-                $playlist->Songs()->add($song->data());
-                $playlist->write();
+                $playlist->addSong($song);
                 return $playlist;
             }
         });
@@ -264,21 +313,7 @@ class Playlist extends DataObject implements ScaffoldingProvider
                     throw new ValidationException($validationResult);
                 }
 
-                $component = $playlist->getManyManyComponents('Songs');
-                $localKey = $component->getLocalKey();
-                $foreignKey = $component->getForeignKey();
-                DB::get_conn()->transactionStart();
-                foreach ($songIDs as $index => $value) {
-                    $update = SQLUpdate::create($component->getJoinTable());
-                    $update->addWhere([
-                        $foreignKey => $playlist->ID,
-                        $localKey   => $value
-                    ]);
-                    $update->assign('SortOrder', $index + 1);
-                    $update->execute();
-                }
-                DB::get_conn()->transactionEnd();
-
+                $playlist->updateSongsOrder($songIDs);
                 return $playlist;
             }
         });
@@ -286,6 +321,7 @@ class Playlist extends DataObject implements ScaffoldingProvider
 
     /**
      * @param SchemaScaffolder $schema
+     * @throws \SilverStripe\ORM\ValidationException
      * @throws \SilverStripe\Security\PermissionFailureException
      * @throws \Exception
      * @throws \InvalidArgumentException
@@ -335,8 +371,7 @@ class Playlist extends DataObject implements ScaffoldingProvider
                     throw new ValidationException($validationResult);
                 }
 
-                $playlist->Songs()->removeByID($songID);
-                $playlist->write();
+                $playlist->removeSong($songID);
                 return $playlist;
             }
         });

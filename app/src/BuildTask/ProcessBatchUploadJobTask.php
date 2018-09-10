@@ -22,6 +22,7 @@ class ProcessBatchUploadJobTask extends BuildTask
      * execute via the TaskRunner
      *
      * @param \SilverStripe\Control\HTTPRequest $request
+     * @throws ValidationException
      */
     public function run($request)
     {
@@ -38,11 +39,9 @@ class ProcessBatchUploadJobTask extends BuildTask
         }
 
         $job->Status = BatchUploadJob::STATUS_PROCESSING;
-        try {
-            $job->write();
-        } catch (ValidationException $e) {
-        }
+        $job->write();
 
+        $playlist = $job->Playlist();
         $files = $job->StreamFiles();
         foreach ($files as $file) {
             /* @var $file File */
@@ -58,25 +57,24 @@ class ProcessBatchUploadJobTask extends BuildTask
                 $song->write();
                 $song->StreamFile->owner->publishRecursive();
 
+                // add to playlist if need
+                if ($playlist->exists()) {
+                    $playlist->addSong($song);
+                }
+
                 /** @noinspection IncrementDecrementOperationEquivalentInspection */
                 $job->ProcessedNumberOfFiles += 1;
                 $job->write();
-            } catch (ValidationException $e) {
+            } catch (\Exception $e) {
                 $job->Status = BatchUploadJob::STATUS_ERROR;
                 $job->Remark = $e->getMessage();
-                try {
-                    $job->write();
-                } catch (ValidationException $e) {
-                }
+                $job->write();
                 $this->exitWithError($e);
             }
         }
 
         $job->Status = BatchUploadJob::STATUS_FINISHED;
-        try {
-            $job->write();
-        } catch (ValidationException $e) {
-        }
+        $job->write();
     }
 
     private function exitWithError($error)
