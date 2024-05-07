@@ -60,7 +60,7 @@ see: [https://docs.docker.com/install/linux/docker-ce/ubuntu/](https://docs.dock
 #### 3. Clone the repo
 
 ```bash
-$ git clone git@github.com:zzdjk6/Groot.git
+$ git clone git@github.com:PetroMakogon/Groot.git
 $ cd Groot
 ```
 
